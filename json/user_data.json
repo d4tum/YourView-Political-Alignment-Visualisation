@@ -1,0 +1,42 @@
+[
+    {
+        "colour": "purple", 
+        "cred": 7.43, 
+        "id": 3, 
+        "link": "<a href=\"/users/3\">timvangelder</a> <span class='credibility'>(7.4)</span>", 
+        "primary": true, 
+        "username": "timvangelder"
+    }, 
+    {
+        "colour": "red", 
+        "cred": 2.64, 
+        "id": 2517, 
+        "link": "<a href=\"/users/2517\">Labor</a> <span class='credibility'>(2.6)</span>", 
+        "primary": true, 
+        "username": "Labor"
+    }, 
+    {
+        "colour": "blue", 
+        "cred": 1.5, 
+        "id": 2518, 
+        "link": "<a href=\"/users/2518\">Liberals</a> <span class='credibility'>(1.5)</span>", 
+        "primary": true, 
+        "username": "Liberals"
+    }, 
+    {
+        "colour": "blue", 
+        "cred": 1.5, 
+        "id": 2519, 
+        "link": "<a href=\"/users/2519\">Nationals</a> <span class='credibility'>(1.5)</span>", 
+        "primary": true, 
+        "username": "Nationals"
+    }, 
+    {
+        "colour": "green", 
+        "cred": 1.52, 
+        "id": 2520, 
+        "link": "<a href=\"/users/2520\">Greens</a> <span class='credibility'>(1.5)</span>", 
+        "primary": true, 
+        "username": "Greens"
+    }
+]
