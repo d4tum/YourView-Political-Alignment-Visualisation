@@ -12,42 +12,12 @@ TODO:
 	- Overall style tidy, prettify, tweaking
 */
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~jQuery stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Create tabs
-$(function() {
-	$("#tabs").tabs();
-});
-
-// Create sliders for the Areas tab with on stop callback to update the plot
-$(function() {
-	$("#slider1").slider().slider("option", "min", -1).slider({
-		max: 1
-	}).on("slidestop", function(event, ui) {
-		update();
-	});
-	$("#slider2").slider().slider("option", "min", -1).slider({
-		max: 1
-	}).on("slidestop", function(event, ui) {
-		update();
-	});
-	$("#slider3").slider().slider("option", "min", -1).slider({
-		max: 1
-	}).on("slidestop", function(event, ui) {
-		update();
-	});
-	$("#slider4").slider().slider("option", "min", -1).slider({
-		max: 1
-	}).on("slidestop", function(event, ui) {
-		update();
-	});
-	$("#slider5").slider().slider("option", "min", -1).slider({
-		max: 1
-	}).on("slidestop", function(event, ui) {
-		update();
-	});
-});
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~d3 stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// For bug where text labels are only half their supposed x value
+// See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
+// for this solution.
+var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 var points;
 var userdata;
@@ -56,8 +26,8 @@ var DEBUG = true;
 
 var svg = d3.select("#scatterplot")
 	.append("svg")
-	.attr("width", "100%")
-	.attr("height", "100%");
+	.attr("width", 600)
+	.attr("height", 600);
 
 // Retrieve user data from userdata.json
 d3.json("json/user_data.json", function(json) {
@@ -216,6 +186,8 @@ function plot() {
 		return d.y;
 	})
 		.style("stroke", "#000")
+		.transition()
+		.duration(800)
 		.attr("r", function(d) {
 		return 20;
 	})
@@ -235,13 +207,14 @@ function setLabels() {
 		.enter()
 		.append("text")
 		.attr("dx", function(d) {
-		return d.x;
+		if (is_firefox) return d.x * 2;
+		else return d.x;
 	})
 		.attr("dy", function(d) {
 		return d.y - 25;
 	})
 		.attr("font-family", "sans-serif")
-		.attr("font-size", "13px")
+		.attr("font-size", "14px")
 		.style("text-anchor", "middle")
 		.text(function(d) {
 		return d.username;
@@ -256,13 +229,14 @@ function updateLabels() {
 		.transition()
 		.duration(1500)
 		.attr("dx", function(d) {
+		if (is_firefox) return d.x * 2;
 		return d.x;
 	})
 		.attr("dy", function(d) {
 		return d.y - 25;
 	})
 		.attr("font-family", "sans-serif")
-		.attr("font-size", "13px")
+		.attr("font-size", "14px")
 		.style("text-anchor", "middle")
 		.text(function(d) {
 		return d.username;
@@ -276,3 +250,38 @@ d3.selection.prototype.moveToFront = function() {
 		this.parentNode.appendChild(this);
 	});
 };
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~jQuery stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Create tabs
+$(function() {
+	$("#tabs").tabs();
+});
+
+// Create sliders for the Areas tab with on stop callback to update the plot
+$(function() {
+	$("#slider1").slider().slider("option", "min", -1).slider({
+		max: 1
+	}).on("slidestop", function(event, ui) {
+		update();
+	});
+	$("#slider2").slider().slider("option", "min", -1).slider({
+		max: 1
+	}).on("slidestop", function(event, ui) {
+		update();
+	});
+	$("#slider3").slider().slider("option", "min", -1).slider({
+		max: 1
+	}).on("slidestop", function(event, ui) {
+		update();
+	});
+	$("#slider4").slider().slider("option", "min", -1).slider({
+		max: 1
+	}).on("slidestop", function(event, ui) {
+		update();
+	});
+	$("#slider5").slider().slider("option", "min", -1).slider({
+		max: 1
+	}).on("slidestop", function(event, ui) {
+		update();
+	});
+});
