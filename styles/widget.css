@@ -4,13 +4,14 @@
 
 	div#widget {
 		width: 900px;
-    	overflow: hidden;
-    	margin-left: 250px;
+   		overflow: hidden;
+		margin-left: 250px;
 	}
 
 	div#scatterplot {
+		height: 600px;
 		width: 600px;
-    	float:left; /* add this */
+		float:left; /* add this */
 	}
 
 	div#controls {
