@@ -14,6 +14,7 @@ TODO:
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~d3 stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+var DEBUG = true;
 // For bug where text labels are only half their supposed x value
 // See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
 // for this solution.
@@ -22,12 +23,14 @@ var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 var points;
 var userdata;
 var data = [];
-var DEBUG = true;
+var w = 600
+var h = 600
+var entities;
 
 var svg = d3.select("#scatterplot")
 	.append("svg")
-	.attr("width", 600)
-	.attr("height", 600);
+	.attr("width", w)
+	.attr("height", h);
 
 // Retrieve user data from userdata.json
 d3.json("json/user_data.json", function(json) {
@@ -147,7 +150,7 @@ function update() {
 			return 20;
 		})
 			.style("fill", function(d) {
-			return betterColour(d);
+			return d3.rgb(d.colour);
 		});
 
 		// Move the labels too
@@ -157,64 +160,48 @@ function update() {
 
 }
 
-// Helper function to select a darker shade of the original colour
-
-function betterColour(d) {
-	if (d.colour == "red") return "darkred";
-	else if (d.colour == "blue") return "darkblue";
-	else if (d.colour == "green") return "darkgreen";
-	else return d.colour;
-}
-
 // Called when the visualisation is first loaded.
 // Binds the data to the circle svg elements and sets the attributes for a datum.
 
 function plot() {
-	svg.selectAll("circle")
+	entities = svg.selectAll("g")
 		.data(scale(data))
 		.enter()
-		.append("circle")
+		.append("g")
 		.on("mouseover", function(d) {
 		var sel = d3.select(this);
 		sel.moveToFront();
 		console.log(d.username);
-	})
+	});
+
+	entities.append("circle")
 		.attr("cx", function(d) {
 		return d.x;
 	})
 		.attr("cy", function(d) {
 		return d.y;
 	})
+		.style("fill", function(d) {
+		return d.colour;
+	})
 		.style("stroke", "#000")
+		.style("stroke-width", 2 + "px")
 		.transition()
 		.duration(800)
 		.attr("r", function(d) {
 		return 20;
-	})
-		.style("fill", function(d) {
-		return betterColour(d);
 	});
 
-	setLabels();
-
-}
-
-// Initializes the labels
-
-function setLabels() {
-	svg.selectAll("text")
-		.data(data)
-		.enter()
-		.append("text")
+	entities.append("text")
 		.attr("dx", function(d) {
 		if (is_firefox) return d.x * 2;
 		else return d.x;
 	})
 		.attr("dy", function(d) {
-		return d.y - 25;
+		return d.y + 40;
 	})
 		.attr("font-family", "sans-serif")
-		.attr("font-size", "14px")
+		.attr("font-size", "13px")
 		.style("text-anchor", "middle")
 		.text(function(d) {
 		return d.username;
@@ -233,10 +220,10 @@ function updateLabels() {
 		return d.x;
 	})
 		.attr("dy", function(d) {
-		return d.y - 25;
+		return d.y + 40;
 	})
 		.attr("font-family", "sans-serif")
-		.attr("font-size", "14px")
+		.attr("font-size", "13px")
 		.style("text-anchor", "middle")
 		.text(function(d) {
 		return d.username;
