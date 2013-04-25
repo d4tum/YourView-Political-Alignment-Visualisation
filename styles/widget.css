@@ -1,4 +1,22 @@
-    .text {
-        font-family: sans-serif;
-        font-size: 11px;
+	p, body {
+		font-size: 10pt; 
+	}
+
+	div#widget {
+		width: 900px;
+    	overflow: hidden;
+    	margin-left: 250px;
+	}
+
+	div#scatterplot {
+		width: 600px;
+    	float:left; /* add this */
+	}
+
+	div#controls {
+    	overflow: hidden; /* if you don't want #second to wrap below #first */
+	}
+
+	.ui-tabs-nav li { 
+		font-size: 10pt; 
 	}
