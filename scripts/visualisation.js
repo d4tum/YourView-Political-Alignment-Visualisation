@@ -145,9 +145,8 @@ function update() {
 			.attr("cy", function(d) {
 			return d.y;
 		})
-			.style("stroke", "#000")
 			.attr("r", function(d) {
-			return 20;
+			return 15;
 		})
 			.style("fill", function(d) {
 			return d3.rgb(d.colour);
@@ -184,12 +183,10 @@ function plot() {
 		.style("fill", function(d) {
 		return d.colour;
 	})
-		.style("stroke", "#000")
-		.style("stroke-width", 2 + "px")
 		.transition()
 		.duration(800)
 		.attr("r", function(d) {
-		return 20;
+		return 15;
 	});
 
 	entities.append("text")
