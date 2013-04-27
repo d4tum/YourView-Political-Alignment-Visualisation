@@ -96,7 +96,7 @@ function chooseRandDummyFile() {
 }
 
 function plotData() {
-	svg.selectAll("g")
+	var g = svg.selectAll("g")
 		.data(scale(data)).enter()
 		.append("g")
 		.on("mouseover", function(d) {
@@ -104,7 +104,8 @@ function plotData() {
 		sel.moveToFront();
 		console.log(d.username);
 	})
-		.append("circle")
+
+	var circle = g.append("circle")
 		.attr("cx", function(d) {
 		return d.x;
 	})
@@ -118,6 +119,10 @@ function plotData() {
 		.duration(700)
 		.attr("r", function(d) {
 		return 15;
+	});
+
+	g.append("svg:title").text(function(d) {
+		return d.username;
 	});
 }
 
