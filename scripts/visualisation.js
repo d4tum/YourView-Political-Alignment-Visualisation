@@ -231,7 +231,6 @@ d3.selection.prototype.moveToFront = function() {
 	});
 };
 
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~jQuery stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Create tabs
 $(function() {
