@@ -1,9 +1,11 @@
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~d3 stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var w = 600
 var h = 600
+var range = 0;
 var data = []; // datapoints - an array of json objects
 var points; // points of the points.json file
 var userdata; // user data from the user_data.json file
-var visibility = []; // boolean array for keeping a record of entities shown
+var visibility = []; // Association array describing which entities are visible
 
 var svg = d3.select("#scatterplot")
 	.append("svg")
@@ -19,13 +21,14 @@ d3.json("json/user_data.json", function(json) {
 function retrievePoints(userdata) {
 	d3.json("json/points.json", function(json) {
 		points = json;
-		initEnabled();
+		initVisiblityArray();
+		findRange(points);
 		data = createData();
 		plotData();
 	});
 }
 
-function initEnabled() {
+function initVisiblityArray() {
 	for (var i = 0; i < points.length; i++) {
 		visibility.push({
 			username: userdata[i].username,
@@ -33,6 +36,32 @@ function initEnabled() {
 		});
 	}
 	console.log(visibility);
+}
+
+Array.max = function( array ){
+    return Math.max.apply( Math, array );
+};
+ 
+Array.min = function( array ){
+    return Math.min.apply( Math, array );
+};
+
+function findRange (points) {
+	var xs = [];
+	var ys = [];
+
+	for (var i = 0; i < points.length; i++) {
+		xs.push(points[i][0]);
+		ys.push(points[i][1]);
+	}
+
+	var xRange = Array.max(xs) - Array.min(xs);
+	var yRange = Array.max(ys) - Array.min(ys);
+	
+	if (xRange > yRange)
+		range = Math.ceil(xRange) + 2;
+	else
+		range = Math.ceil(yRange) + 2;
 }
 
 function createData() {
@@ -58,8 +87,8 @@ function createData() {
 
 function scale(dataset) {
 	for (var i = 0; i < dataset.length; i++) {
-		dataset[i].x = (dataset[i].x + 5) * 50
-		dataset[i].y = (dataset[i].y + 5) * 50
+		dataset[i].x = (dataset[i].x + (range/2)) * 50;
+		dataset[i].y = (dataset[i].y + (range/2)) * 50;
 		// points[i][j] = (points[i][j] + 5) * 50;
 	}
 	return dataset
@@ -129,7 +158,7 @@ function plotData() {
 function updatePlot() {
 	d3.json(chooseRandDummyFile(), function(json) {
 		points = json;
-
+		findRange(points);
 		data = createData();
 
 		// enter() and append() are omitted for a transision()
