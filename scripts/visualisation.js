@@ -28,7 +28,7 @@ $(document).ready(function() {
 	controls.appendTo(widget);
 
 	//4.
-	var tabs = $("<div id='tabs'></div>");
+	var tabs = $("<div id='tabs' class='container'></div>");
 	tabs.appendTo(controls);
 
 	var ul = $("<ul></ul>");
@@ -48,7 +48,7 @@ $(document).ready(function() {
 	var tab2Title = $("<a href='#tabs-2'>Entities</a>");
 	tab2Title.appendTo(li);
 
-	var tab1 = $("<div id='tabs-1'></div>");
+	var tab1 = $("<div id='tabs-1' class='panel'></div>");
 	tab1.appendTo(tabs);
 
 	var slider1 = $("<p>Environment</p><div id='slider1'></div>");
@@ -59,10 +59,26 @@ $(document).ready(function() {
 	slider3.appendTo(tab1);
 	var slider4 = $("<p>Asylum Seekers</p><div id='slider4'></div>");
 	slider4.appendTo(tab1);
-	var slider5 = $("<p>Gonski Report</p><div id='slider5'></div>");
+	var slider5 = $("<p>Education</p><div id='slider5'></div>");
 	slider5.appendTo(tab1);
+	var slider6 = $("<p>Transport</p><div id='slider6'></div>");
+	slider6.appendTo(tab1);
+	var slider7 = $("<p>Tax Reform</p><div id='slider7'></div>");
+	slider7.appendTo(tab1);
+	var slider8 = $("<p>Indigenous Disadvantage</p><div id='slider8'></div>");
+	slider8.appendTo(tab1);
+	var slider9 = $("<p>Socio-economic Gap</p><div id='slider9'></div>");
+	slider9.appendTo(tab1);
+	var slider10 = $("<p>Mental Health</p><div id='slider10'></div>");
+	slider10.appendTo(tab1);
+	var slider11 = $("<p>Water</p><div id='slider11'></div>");
+	slider11.appendTo(tab1);
+	var slider12 = $("<p>Glass Ceiling</p><div id='slider12'></div>");
+	slider12.appendTo(tab1);
+	var slider13 = $("<p>Homelessness</p><div id='slider12'></div>");
+	slider13.appendTo(tab1);
 
-	var tab2 = $("<div id='tabs-2'></div>");
+	var tab2 = $("<div id='tabs-2' class='panel'></div>");
 	tab2.appendTo(tabs);
 
 	var button1 = $("<button id='button1'>Liberals</button>");
@@ -332,6 +348,46 @@ $(document).ready(function() {
 			updatePlot();
 		});
 		$("#slider5").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider6").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider7").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider8").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider9").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider10").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider11").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider12").slider().slider("option", "min", -1).slider({
+			max: 1
+		}).on("slidestop", function(event, ui) {
+			updatePlot();
+		});
+		$("#slider12").slider().slider("option", "min", -1).slider({
 			max: 1
 		}).on("slidestop", function(event, ui) {
 			updatePlot();
