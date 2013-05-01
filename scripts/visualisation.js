@@ -16,7 +16,7 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'https://github.com/qubz/qubz.github.io/raw/master/styles/widget.css';
+	link.href = 'https://raw.github.com/qubz/qubz.github.io/master/styles/widget.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -168,13 +168,13 @@ var d3LoadedCallback = function() {
 			.attr("height", h);
 
 		// Retrieve user data from userdata.json
-		d3.json("https://github.com/qubz/qubz.github.io/blob/master/json/user_data.json", function(json) {
+		d3.json("https://raw.github.com/qubz/qubz.github.io/master/json/user_data.json", function(json) {
 			userdata = json;
 			retrievePoints(userdata);
 		});
 
 		function retrievePoints(userdata) {
-			d3.json("https://github.com/qubz/qubz.github.io/blob/master/json/points.json", function(json) {
+			d3.json("https://raw.github.com/qubz/qubz.github.io/master/json/points.json", function(json) {
 				points = json;
 				initVisiblityArray();
 				findRange(points);
@@ -252,11 +252,11 @@ var d3LoadedCallback = function() {
 		function chooseRandDummyFile() {
 			var array = [];
 
-			path1 = "https://github.com/qubz/qubz.github.io/blob/master/json/dummy_points1.json";
-			path2 = "https://github.com/qubz/qubz.github.io/blob/master/json/dummy_points2.json";
-			path3 = "https://github.com/qubz/qubz.github.io/blob/master/json/dummy_points3.json";
-			path4 = "https://github.com/qubz/qubz.github.io/blob/master/json/dummy_points4.json";
-			path5 = "https://github.com/qubz/qubz.github.io/blob/master/json/dummy_points5.json";
+			path1 = "https://raw.github.com/qubz/qubz.github.io/master/json/dummy_points1.json";
+			path2 = "https://raw.github.com/qubz/qubz.github.io/master/json/dummy_points2.json";
+			path3 = "https://raw.github.com/qubz/qubz.github.io/master/json/dummy_points3.json";
+			path4 = "https://raw.github.com/qubz/qubz.github.io/master/json/dummy_points4.json";
+			path5 = "https://raw.github.com/qubz/qubz.github.io/master/json/dummy_points5.json";
 
 			array.push(path1);
 			array.push(path2);
