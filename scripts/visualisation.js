@@ -6,6 +6,74 @@ var points; // points of the points.json file
 var userdata; // user data from the user_data.json file
 var visibility = []; // Association array describing which entities are visible
 
+// Load all style sheets
+var doc = document; // shortcut
+
+var cssId = 'widgetCss'; // you could encode the css path itself to generate id..
+if (!doc.getElementById(cssId)) {
+	var head = doc.getElementsByTagName('head')[0];
+	var link = doc.createElement('link');
+	link.id = cssId;
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = 'styles/widget.css';
+	link.media = 'all';
+	head.appendChild(link);
+}
+
+var cssId = 'themeCss'; // you could encode the css path itself to generate id..
+if (!doc.getElementById(cssId)) {
+	var head = doc.getElementsByTagName('head')[0];
+	var link = doc.createElement('link');
+	link.id = cssId;
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = 'styles/absolution.css';
+	link.media = 'all';
+	head.appendChild(link);
+}
+
+// Load jQuery.js using only JS
+
+function loadScript(url, callback) {
+	// adding the script tag to the head as suggested before
+	var head = document.getElementsByTagName('head')[0];
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = url;
+
+	// then bind the event to the callback function 
+	// there are several events for cross browser compatibility
+	script.onreadystatechange = callback;
+	script.onload = callback;
+
+	// fire the loading
+	head.appendChild(script);
+}
+
+var jQueryUrl = '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js';
+var jQueryUiUrl = '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js';
+var d3Url = 'http://d3js.org/d3.v2.js';
+
+var jQueryLoadedCallback = function() {
+	console.log('jQuery loaded');
+	// here, do what ever you want
+	loadScript(jQueryUiUrl, jQueryUILoadedCallback);
+
+};
+
+var jQueryUILoadedCallback = function() {
+	console.log('jQuery UI loaded');
+	// here, do what ever you want
+	loadScript(d3Url, d3LoadedCallback);
+
+};
+
+var d3LoadedCallback = function() {
+	console.log('d3 loaded');
+
+	
+
 $(document).ready(function() {
 	// put all your jQuery goodness in here.
 	// jQuery stuff to build DOM
@@ -75,7 +143,7 @@ $(document).ready(function() {
 	slider11.appendTo(tab1);
 	var slider12 = $("<p>Glass Ceiling</p><div id='slider12'></div>");
 	slider12.appendTo(tab1);
-	var slider13 = $("<p>Homelessness</p><div id='slider12'></div>");
+	var slider13 = $("<p>Homelessness</p><div id='slider13'></div>");
 	slider13.appendTo(tab1);
 
 	var tab2 = $("<div id='tabs-2' class='panel'></div>");
@@ -387,7 +455,7 @@ $(document).ready(function() {
 		}).on("slidestop", function(event, ui) {
 			updatePlot();
 		});
-		$("#slider12").slider().slider("option", "min", -1).slider({
+		$("#slider13").slider().slider("option", "min", -1).slider({
 			max: 1
 		}).on("slidestop", function(event, ui) {
 			updatePlot();
@@ -470,3 +538,8 @@ $(document).ready(function() {
 	});
 
 });
+};
+
+
+
+loadScript(jQueryUrl, jQueryLoadedCallback);
