@@ -16,7 +16,7 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'styles/widget.css';
+	link.href = 'https://github.com/qubz/qubz.github.io/raw/master/styles/widget.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -28,7 +28,7 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'styles/absolution.css';
+	link.href = 'https://raw.github.com/qubz/qubz.github.io/master/styles/absolution.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
