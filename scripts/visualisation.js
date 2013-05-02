@@ -6,6 +6,10 @@ var tags;
 var users; // user data from the user_data.json file
 var points; // points of the points.json file
 var visibility = []; // Association array describing which entities are visible
+// For bug where text labels are only half their supposed x value
+// See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
+// for this solution.
+var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 // Load all style sheets
 var doc = document; // shortcut
@@ -120,7 +124,6 @@ var d3LoadedCallback = function() {
 					max: 1
 				}).on("slidestop", function(event, ui) {
 					updatePlot();
-					console.log("updatePlot called");
 				});
 			}
 
@@ -162,10 +165,10 @@ var d3LoadedCallback = function() {
 			users = json.users;
 			tags = json.tags;
 			initControls();
-			initScatterplot(users);
+			initScatterplot();
 		});
 
-		function initScatterplot(users) {
+		function initScatterplot() {
 			// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
 			d3.json("json/points.json", function(json) {
 				points = json;
@@ -177,7 +180,7 @@ var d3LoadedCallback = function() {
 		}
 
 		function initEntityVisiblity() {
-			for (var i = 0; i < points.length; i++) {
+			for (var i = 0; i < users.length; i++) {
 				visibility.push({
 					username: users[i].username,
 					enabled: true
@@ -212,7 +215,7 @@ var d3LoadedCallback = function() {
 		function createData() {
 			var dataset = [];
 			// Add the users to the points
-			for (var i = 0; i < points.length; i++) {
+			for (var i = 0; i < users.length; i++) {
 				if (visibility[i].enabled) {
 					dataset.push({
 						x: points[i][0],
@@ -236,7 +239,7 @@ var d3LoadedCallback = function() {
 				dataset[i].y = (dataset[i].y + (range / 2)) * 50;
 				// points[i][j] = (points[i][j] + 5) * 50;
 			}
-			return dataset
+			return dataset;
 		}
 
 		var previousIndex;
@@ -269,14 +272,14 @@ var d3LoadedCallback = function() {
 		function plotData() {
 			var g = svg.selectAll("g")
 				.data(scale(data)).enter()
-				.append("g")
+				.append("g");
+
+			g.append("circle")
 				.on("mouseover", function(d) {
 				var sel = d3.select(this);
 				sel.moveToFront();
 				console.log(d.username);
 			})
-
-			var circle = g.append("circle")
 				.attr("cx", function(d) {
 				return d.x;
 			})
@@ -290,22 +293,37 @@ var d3LoadedCallback = function() {
 				.duration(700)
 				.attr("r", function(d) {
 				return 15;
+			})
+
+			g.append("svg:title")
+				.text(function(d) {
+				return d.username;
 			});
 
-			g.append("svg:title").text(function(d) {
+			g.append("text")
+				.attr("dx", function(d) {
+				return d.x;
+			})
+				.attr("dy", function(d) {
+				return d.y + 35;
+			})
+				.attr("font-family", "sans-serif")
+				.attr("font-size", "13px")
+				.style("text-anchor", "middle")
+				.text(function(d) {
 				return d.username;
 			});
 		}
 
 		function updatePlot() {
-			d3.json("json/points.json", function(json) {
+			d3.json(chooseRandDummyFile(), function(json) {
 				points = json;
 				findRange(points);
-				data = createData();
+				data = scale(createData());
 
 				// enter() and append() are omitted for a transision()
 				svg.selectAll("circle")
-					.data(scale(data))
+					.data(data)
 					.transition()
 					.duration(1100)
 					.attr("cx", function(d) {
@@ -320,24 +338,52 @@ var d3LoadedCallback = function() {
 					.style("fill", function(d) {
 					return d3.rgb(d.colour);
 				});
+
+				svg.selectAll("text")
+					.data(data)
+					.transition()
+					.duration(1100)
+					.attr("dx", function(d) {
+					if (is_firefox) return d.x * 2;
+					return d.x;
+				})
+					.attr("dy", function(d) {
+					return d.y + 35;
+				})
+					.attr("font-family", "sans-serif")
+					.attr("font-size", "13px")
+					.style("text-anchor", "middle")
+					.text(function(d) {
+					return d.username;
+				});
+
+				console.log(data);
 			});
 		}
 
 		function toggleEntityVisiblity(enable) {
 
-			data = createData();
+			data = scale(createData());
 
-			if (!enable) {
+			if (!enable) { // remove point
 				svg.selectAll('circle')
-					.data(scale(data), function(d) {
+					.data(data, function(d) {
 					return (d.username);
 				})
 					.exit().transition()
 					.attr("r", 0)
 					.remove();
-			} else {
+
+				svg.selectAll('text')
+					.data(data, function(d) {
+					return (d.username);
+				})
+					.exit()
+					.remove();
+
+			} else { // add point
 				svg.selectAll("circle")
-					.data(scale(data), function(d) {
+					.data(data, function(d) {
 					return (d.username);
 				})
 					.enter()
@@ -360,6 +406,26 @@ var d3LoadedCallback = function() {
 					.duration(700)
 					.attr("r", function(d) {
 					return 15;
+				});
+
+				svg.selectAll("text")
+					.data(data, function(d) {
+					return (d.username);
+				})
+					.enter()
+					.append("text")
+					.attr("dx", function(d) {
+					if (is_firefox) return d.x * 2;
+					return d.x;
+				})
+					.attr("dy", function(d) {
+					return d.y + 35;
+				})
+					.attr("font-family", "sans-serif")
+					.attr("font-size", "13px")
+					.style("text-anchor", "middle")
+					.text(function(d) {
+					return d.username;
 				});
 			}
 
