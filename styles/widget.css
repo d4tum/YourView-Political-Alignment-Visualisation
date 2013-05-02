@@ -4,7 +4,8 @@
    		margin-top: 15px;
 		margin-left: 250px;
 		border:1px solid #BFBFBF;
-		box-shadow: 0px 2px 5px #aaaaaa;
+		/*box-shadow: 0px 2px 5px #aaaaaa;*/
+		box-shadow: 0px 4px 8px #aaaaaa;
 
 		background: #eeeeee; /* Old browsers */
 		/* IE9 SVG, needs conditional override of 'filter' to 'none' */

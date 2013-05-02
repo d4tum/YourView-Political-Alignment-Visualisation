@@ -2,8 +2,9 @@ var w = 600
 var h = 600
 var range = 0;
 var data = []; // datapoints - an array of json objects
+var tags;
+var users; // user data from the user_data.json file
 var points; // points of the points.json file
-var userdata; // user data from the user_data.json file
 var visibility = []; // Association array describing which entities are visible
 
 // Load all style sheets
@@ -16,7 +17,8 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/qubz.github.io/master/styles/widget.css';
+	// link.href = 'https://raw.github.com/qubz/qubz.github.io/master/styles/widget.css';
+	link.href = 'styles/widget.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -28,12 +30,16 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/qubz.github.io/master/styles/absolution.css';
+	// link.href = 'https://raw.github.com/qubz/qubz.github.io/master/styles/absolution.css';
+	link.href = 'styles/absolution.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
 
 // Load jQuery.js using only JS
+var jQueryUrl = '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js';
+var jQueryUiUrl = '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js';
+var d3Url = 'http://d3js.org/d3.v2.js';
 
 function loadScript(url, callback) {
 	// adding the script tag to the head as suggested before
@@ -51,30 +57,17 @@ function loadScript(url, callback) {
 	head.appendChild(script);
 }
 
-var jQueryUrl = '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js';
-var jQueryUiUrl = '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js';
-var d3Url = 'http://d3js.org/d3.v2.js';
-
 var jQueryLoadedCallback = function() {
-	console.log('jQuery loaded');
-	// here, do what ever you want
 	loadScript(jQueryUiUrl, jQueryUILoadedCallback);
-
 };
 
 var jQueryUILoadedCallback = function() {
-	console.log('jQuery UI loaded');
-	// here, do what ever you want
 	loadScript(d3Url, d3LoadedCallback);
-
 };
 
 var d3LoadedCallback = function() {
-	console.log('d3 loaded');
-
-	// ready to run the rest of the code
+	// Everything is loaded, ready to run the rest of the code
 	$(document).ready(function() {
-		// put all your jQuery goodness in here.
 		// jQuery stuff to build DOM
 		// body
 		//1. 	|---widget
@@ -87,78 +80,228 @@ var d3LoadedCallback = function() {
 
 		//1.
 		var widget = document.getElementById("yourview-visualization");
-
-		//2, 3.
 		var scatterplot = $("<div id='scatterplot'></div>");
 		var controls = $("<div id='controls'></div>");
+
 		scatterplot.appendTo(widget);
 		controls.appendTo(widget);
 
-		//4.
-		var tabs = $("<div id='tabs' class='container'></div>");
-		tabs.appendTo(controls);
+		function initControls() {
+			//4.
+			var tabs = $("<div id='tabs' class='container'></div>");
+			tabs.appendTo(controls);
 
-		var ul = $("<ul></ul>");
-		ul.appendTo(tabs);
+			var ul = $("<ul></ul>");
+			ul.appendTo(tabs);
 
-		var li = $("<li></li>");
-		li.appendTo(ul);
+			var li = $("<li></li>");
+			li.appendTo(ul);
 
-		//5.
-		var tab1Title = $("<a href='#tabs-1'>Areas</a>");
-		tab1Title.appendTo(li);
+			//5.
+			var tab1Title = $("<a href='#tabs-1'>Areas</a>");
+			tab1Title.appendTo(li);
 
-		var li = $("<li></li>");
-		li.appendTo(ul);
+			var li = $("<li></li>");
+			li.appendTo(ul);
 
-		//6.
-		var tab2Title = $("<a href='#tabs-2'>Entities</a>");
-		tab2Title.appendTo(li);
+			//6.
+			var tab2Title = $("<a href='#tabs-2'>Entities</a>");
+			tab2Title.appendTo(li);
 
-		var tab1 = $("<div id='tabs-1' class='panel'></div>");
-		tab1.appendTo(tabs);
+			var tab1 = $("<div id='tabs-1' class='panel'></div>");
+			tab1.appendTo(tabs);
 
-		var slider1 = $("<p>Environment</p><div id='slider1'></div>");
-		slider1.appendTo(tab1);
-		var slider2 = $("<p>Economy and Business</p><div id='slider2'></div>");
-		slider2.appendTo(tab1);
-		var slider3 = $("<p>Social Policy</p><div id='slider3'></div>");
-		slider3.appendTo(tab1);
-		var slider4 = $("<p>Asylum Seekers</p><div id='slider4'></div>");
-		slider4.appendTo(tab1);
-		var slider5 = $("<p>Education</p><div id='slider5'></div>");
-		slider5.appendTo(tab1);
-		var slider6 = $("<p>Transport</p><div id='slider6'></div>");
-		slider6.appendTo(tab1);
-		var slider7 = $("<p>Tax Reform</p><div id='slider7'></div>");
-		slider7.appendTo(tab1);
-		var slider8 = $("<p>Indigenous Disadvantage</p><div id='slider8'></div>");
-		slider8.appendTo(tab1);
-		var slider9 = $("<p>Socio-economic Gap</p><div id='slider9'></div>");
-		slider9.appendTo(tab1);
-		var slider10 = $("<p>Mental Health</p><div id='slider10'></div>");
-		slider10.appendTo(tab1);
-		var slider11 = $("<p>Water</p><div id='slider11'></div>");
-		slider11.appendTo(tab1);
-		var slider12 = $("<p>Glass Ceiling</p><div id='slider12'></div>");
-		slider12.appendTo(tab1);
-		var slider13 = $("<p>Homelessness</p><div id='slider13'></div>");
-		slider13.appendTo(tab1);
 
-		var tab2 = $("<div id='tabs-2' class='panel'></div>");
-		tab2.appendTo(tabs);
+			// TODO - dynamic injection from tags
+			var slider1 = $("<p>Environment</p><div id='slider1'></div>");
+			slider1.appendTo(tab1);
+			var slider2 = $("<p>Economy and Business</p><div id='slider2'></div>");
+			slider2.appendTo(tab1);
+			var slider3 = $("<p>Social Policy</p><div id='slider3'></div>");
+			slider3.appendTo(tab1);
+			var slider4 = $("<p>Asylum Seekers</p><div id='slider4'></div>");
+			slider4.appendTo(tab1);
+			var slider5 = $("<p>Education</p><div id='slider5'></div>");
+			slider5.appendTo(tab1);
+			var slider6 = $("<p>Transport</p><div id='slider6'></div>");
+			slider6.appendTo(tab1);
+			var slider7 = $("<p>Tax Reform</p><div id='slider7'></div>");
+			slider7.appendTo(tab1);
+			var slider8 = $("<p>Indigenous Disadvantage</p><div id='slider8'></div>");
+			slider8.appendTo(tab1);
+			var slider9 = $("<p>Socio-economic Gap</p><div id='slider9'></div>");
+			slider9.appendTo(tab1);
+			var slider10 = $("<p>Mental Health</p><div id='slider10'></div>");
+			slider10.appendTo(tab1);
+			var slider11 = $("<p>Water</p><div id='slider11'></div>");
+			slider11.appendTo(tab1);
+			var slider12 = $("<p>Glass Ceiling</p><div id='slider12'></div>");
+			slider12.appendTo(tab1);
+			var slider13 = $("<p>Homelessness</p><div id='slider13'></div>");
+			slider13.appendTo(tab1);
 
-		var button1 = $("<button id='button1'>Liberals</button>");
-		var button2 = $("<button id='button2'>Labor</button>");
-		var button3 = $("<button id='button3'>Greens</button>");
-		var button4 = $("<button id='button4'>Nationals</button>");
-		var button5 = $("<button id='button5'>Tim van Gelder</button>");
+			var tab2 = $("<div id='tabs-2' class='panel'></div>");
+			tab2.appendTo(tabs);
 
-		button1.appendTo(tab2);
-		button2.appendTo(tab2);
-		button3.appendTo(tab2);
-		button4.appendTo(tab2);
-		button5.appendTo(tab2);
+			// TODO dynamic injection from users
+			var button1 = $("<button id='button1'>Liberals</button>");
+			var button2 = $("<button id='button2'>Labor</button>");
+			var button3 = $("<button id='button3'>Greens</button>");
+			var button4 = $("<button id='button4'>Nationals</button>");
+			//var button5 = $("<button id='button5'>Tim van Gelder</button>");
+
+			button1.appendTo(tab2);
+			button2.appendTo(tab2);
+			button3.appendTo(tab2);
+			button4.appendTo(tab2);
+			//button5.appendTo(tab2);
+
+
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~jQuery stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// Create tabs
+			$(function() {
+				$("#tabs").tabs();
+			});
+
+			// Create sliders for the Areas tab with on stop callback to update the plot
+			$(function() {
+				$("#slider1").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider2").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider3").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider4").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider5").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider6").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider7").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider8").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider9").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider10").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider11").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider12").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+				$("#slider13").slider().slider("option", "min", -1).slider({
+					max: 1
+				}).on("slidestop", function(event, ui) {
+					updatePlot();
+				});
+			});
+
+			// 1. find the username of the circle clicked
+			// 2. toggle it's enabled state
+			// 3. create a new data array and bind it to circle
+			// 4. call exit().remove()
+			// see - http://mbostock.github.io/d3/tutorial/circle.html
+			$(function() {
+				$("#button1").click(function() {
+					for (var i = 0; i < visibility.length; i++) {
+						if (visibility[i].username == 'Liberals') {
+							visibility[i].enabled = !visibility[i].enabled;
+							toggleEntityVisiblity(visibility[i].enabled);
+						}
+					}
+
+				});
+			});
+
+			$(function() {
+				$("#button2").click(function() {
+
+					for (var i = 0; i < visibility.length; i++) {
+						if (visibility[i].username == 'Labor') {
+							visibility[i].enabled = !visibility[i].enabled;
+							toggleEntityVisiblity(visibility[i].enabled);
+						}
+					}
+
+				});
+			});
+
+			$(function() {
+				$("#button3").click(function() {
+
+					for (var i = 0; i < visibility.length; i++) {
+						if (visibility[i].username == 'Greens') {
+							visibility[i].enabled = !visibility[i].enabled;
+							toggleEntityVisiblity(visibility[i].enabled);
+						}
+					}
+
+				});
+			});
+
+			$(function() {
+				$("#button4").click(function() {
+
+					for (var i = 0; i < visibility.length; i++) {
+						if (visibility[i].username == 'Nationals') {
+							visibility[i].enabled = !visibility[i].enabled;
+							toggleEntityVisiblity(visibility[i].enabled);
+						}
+					}
+
+				});
+			});
+
+			// $(function() {
+			// 	$("#button5").click(function() {
+
+			// 		for (var i = 0; i < visibility.length; i++) {
+			// 			if (visibility[i].username == 'timvangelder') {
+			// 				console.log(visibility[i].enabled);
+			// 				visibility[i].enabled = !visibility[i].enabled;
+			// 				toggleEntityVisiblity(visibility[i].enabled);
+			// 			}
+			// 		}
+
+			// 	});
+			// });
+		}
 
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~d3 stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -167,30 +310,33 @@ var d3LoadedCallback = function() {
 			.attr("width", w)
 			.attr("height", h);
 
-		// Retrieve user data from userdata.json
+		// Retrieve user data from user_data.json
+		// d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
 		d3.json("json/user_data.json", function(json) {
-			userdata = json;
-			retrievePoints(userdata);
+			users = json.users;
+			tag = json.tags;
+			initControls();
+			initScatterplot(users);
 		});
 
-		function retrievePoints(userdata) {
+		function initScatterplot(users) {
+			// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
 			d3.json("json/points.json", function(json) {
 				points = json;
-				initVisiblityArray();
+				initEntityVisiblity();
 				findRange(points);
 				data = createData();
 				plotData();
 			});
 		}
 
-		function initVisiblityArray() {
+		function initEntityVisiblity() {
 			for (var i = 0; i < points.length; i++) {
 				visibility.push({
-					username: userdata[i].username,
+					username: users[i].username,
 					enabled: true
 				});
 			}
-			console.log(visibility);
 		}
 
 		Array.max = function(array) {
@@ -219,18 +365,18 @@ var d3LoadedCallback = function() {
 
 		function createData() {
 			var dataset = [];
-			// Add the user data to the points
+			// Add the users to the points
 			for (var i = 0; i < points.length; i++) {
 				if (visibility[i].enabled) {
 					dataset.push({
 						x: points[i][0],
 						y: points[i][1],
-						colour: userdata[i].colour,
-						cred: userdata[i].cred,
-						id: userdata[i].id,
-						link: userdata[i].link,
-						primary: userdata[i].primary,
-						username: userdata[i].username
+						colour: users[i].colour,
+						cred: users[i].cred,
+						id: users[i].id,
+						link: users[i].link,
+						primary: users[i].primary,
+						username: users[i].username
 					});
 				}
 			}
@@ -271,10 +417,7 @@ var d3LoadedCallback = function() {
 			}
 
 			previousIndex = index;
-			// Adjust index for zero base
-			index -= 1;
-
-			return array[index];
+			return array[index - 1];
 		}
 
 		function plotData() {
@@ -309,7 +452,7 @@ var d3LoadedCallback = function() {
 		}
 
 		function updatePlot() {
-			d3.json(chooseRandDummyFile(), function(json) {
+			d3.json("json/points.json", function(json) {
 				points = json;
 				findRange(points);
 				data = createData();
@@ -334,7 +477,7 @@ var d3LoadedCallback = function() {
 			});
 		}
 
-		function toggleEntity(enable) {
+		function toggleEntityVisiblity(enable) {
 
 			data = createData();
 
@@ -374,9 +517,6 @@ var d3LoadedCallback = function() {
 				});
 			}
 
-
-			console.log(data);
-
 		}
 
 		d3.selection.prototype.moveToFront = function() {
@@ -385,160 +525,7 @@ var d3LoadedCallback = function() {
 			});
 		};
 
-
-		// ~~~~~~~~~~~~~~~~~~~~~~~~~~jQuery stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		// Create tabs
-		$(function() {
-			$("#tabs").tabs();
-		});
-
-		// Create sliders for the Areas tab with on stop callback to update the plot
-		$(function() {
-			$("#slider1").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider2").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider3").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider4").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider5").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider6").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider7").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider8").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider9").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider10").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider11").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider12").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-			$("#slider13").slider().slider("option", "min", -1).slider({
-				max: 1
-			}).on("slidestop", function(event, ui) {
-				updatePlot();
-			});
-		});
-
-		// 1. find the username of the circle clicked
-		// 2. toggle it's enabled state
-		// 3. create a new data array bad bind it to circle
-		// 4. call exit().remove()
-		// see - http://mbostock.github.io/d3/tutorial/circle.html
-		$(function() {
-			$("#button1").click(function() {
-				for (var i = 0; i < visibility.length; i++) {
-					if (visibility[i].username == 'Liberals') {
-						console.log(visibility[i].enabled);
-						visibility[i].enabled = !visibility[i].enabled;
-						toggleEntity(visibility[i].enabled);
-					}
-				}
-
-			});
-		});
-
-		$(function() {
-			$("#button2").click(function() {
-
-				for (var i = 0; i < visibility.length; i++) {
-					if (visibility[i].username == 'Labor') {
-						console.log(visibility[i].enabled);
-						visibility[i].enabled = !visibility[i].enabled;
-						console.log(visibility[i].enabled);
-						toggleEntity(visibility[i].enabled);
-					}
-				}
-
-			});
-		});
-
-		$(function() {
-			$("#button3").click(function() {
-
-				for (var i = 0; i < visibility.length; i++) {
-					if (visibility[i].username == 'Greens') {
-						console.log(visibility[i].enabled);
-						visibility[i].enabled = !visibility[i].enabled;
-						toggleEntity(visibility[i].enabled);
-					}
-				}
-
-			});
-		});
-
-		$(function() {
-			$("#button4").click(function() {
-
-				for (var i = 0; i < visibility.length; i++) {
-					if (visibility[i].username == 'Nationals') {
-						console.log(visibility[i].enabled);
-						visibility[i].enabled = !visibility[i].enabled;
-						toggleEntity(visibility[i].enabled);
-					}
-				}
-
-			});
-		});
-
-		$(function() {
-			$("#button5").click(function() {
-
-				for (var i = 0; i < visibility.length; i++) {
-					if (visibility[i].username == 'timvangelder') {
-						console.log(visibility[i].enabled);
-						visibility[i].enabled = !visibility[i].enabled;
-						toggleEntity(visibility[i].enabled);
-					}
-				}
-
-			});
-		});
-
 	});
 };
-
-
 
 loadScript(jQueryUrl, jQueryLoadedCallback);
