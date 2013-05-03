@@ -254,8 +254,8 @@ var d3LoadedCallback = function() {
 
 		function scale(dataset) {
 			for (var i = 0; i < dataset.length; i++) {
-				dataset[i].x = (dataset[i].x + (range / 2)) * 5;
-				dataset[i].y = (dataset[i].y + (range / 2)) * 5;
+				dataset[i].x = (dataset[i].x + (range / 2)) * 2;
+				dataset[i].y = (dataset[i].y + (range / 2)) * 2;
 				// points[i][j] = (points[i][j] + 5) * 50;
 			}
 			return dataset;
