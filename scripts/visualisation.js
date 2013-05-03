@@ -242,6 +242,7 @@ var d3LoadedCallback = function() {
 						colour: users[i].colour,
 						cred: users[i].cred,
 						id: users[i].id,
+						index: users[i].index,
 						link: users[i].link,
 						primary: users[i].primary,
 						username: users[i].username
@@ -254,8 +255,8 @@ var d3LoadedCallback = function() {
 
 		function scale(dataset) {
 			for (var i = 0; i < dataset.length; i++) {
-				dataset[i].x = (dataset[i].x + (range / 2)) * 2;
-				dataset[i].y = (dataset[i].y + (range / 2)) * 2;
+				dataset[i].x = (dataset[i].x + (range / 2)) * 3;
+				dataset[i].y = (dataset[i].y + (range / 2)) * 3;
 				// points[i][j] = (points[i][j] + 5) * 50;
 			}
 			return dataset;
@@ -342,7 +343,6 @@ var d3LoadedCallback = function() {
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "13px")
 				.style("text-anchor", "middle")
-				.attr("class", "shadow")
 				.text(function(d) {
 				return d.username;
 			});
@@ -393,7 +393,6 @@ var d3LoadedCallback = function() {
 					.attr("font-family", "sans-serif")
 					.attr("font-size", "13px")
 					.style("text-anchor", "middle")
-					.attr("class", "shadow")
 					.text(function(d) {
 					return d.username;
 				});
@@ -496,7 +495,6 @@ var d3LoadedCallback = function() {
 					.attr("font-family", "sans-serif")
 					.attr("font-size", "13px")
 					.style("text-anchor", "middle")
-					.attr("class", "shadow")
 					.text(function(d) {
 					return d.username;
 				});
