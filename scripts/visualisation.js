@@ -1,20 +1,21 @@
 var w = 600
 var h = 600
 var range = 0;
-var data = []; // datapoints - an array of json objects
-var tags;
-var users; // user data from the user_data.json file
-var points; // points of the points.json file
-var visibility = []; // Association array describing which entities are visible
+var data = []; // the  datajoin object for d3
+var tags; // Relates to sliders
+var users; // user data (index corresponds to that of points.json)
+var points; // points (index corresponds to that of user_data.users from user_data.json)
+var visibility = []; // Utitlity assoc. array storing the state of en entitys visibility on the map
 // For bug where text labels are only half their supposed x value
 // See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
 // for this solution.
 var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
-// Load all style sheets
+// Load each style sheet
 var doc = document; // shortcut
 
-var cssId = 'widgetCss'; // you could encode the css path itself to generate id..
+// Pull in the main css file
+var cssId = 'widgetCss';
 if (!doc.getElementById(cssId)) {
 	var head = doc.getElementsByTagName('head')[0];
 	var link = doc.createElement('link');
@@ -27,7 +28,8 @@ if (!doc.getElementById(cssId)) {
 	head.appendChild(link);
 }
 
-var cssId = 'themeCss'; // you could encode the css path itself to generate id..
+// Grab the theme css file
+var cssId = 'themeCss';
 if (!doc.getElementById(cssId)) {
 	var head = doc.getElementsByTagName('head')[0];
 	var link = doc.createElement('link');
@@ -72,17 +74,7 @@ var jQueryUILoadedCallback = function() {
 var d3LoadedCallback = function() {
 	// Everything is loaded, ready to run the rest of the code
 	$(document).ready(function() {
-		// jQuery stuff to build DOM
-		// body
-		//1. 	|---widget
-		//2.			|---scatterplot
-		//3.			|---controls
-		//4.					|---tabs
-		//5.						|---tabs-1
-		//								
-		//6.						|---tabs-2
-
-		//1.
+		// jQuery stuff to build DOM from this script
 		var widget = document.getElementById("yourview-visualization");
 		var scatterplot = $("<div id='scatterplot'></div>");
 		var controls = $("<div id='controls'></div>");
@@ -90,8 +82,9 @@ var d3LoadedCallback = function() {
 		scatterplot.appendTo(widget);
 		controls.appendTo(widget);
 
+		// Initiealise the controls; the tabs.
+
 		function initControls() {
-			//4.
 			var tabs = $("<div id='tabs' class='container'></div>");
 			tabs.appendTo(controls);
 
@@ -101,27 +94,32 @@ var d3LoadedCallback = function() {
 			var li = $("<li></li>");
 			li.appendTo(ul);
 
-			//5.
 			var tab1Title = $("<a href='#tabs-1'>Areas</a>");
 			tab1Title.appendTo(li);
 
 			var li = $("<li></li>");
 			li.appendTo(ul);
 
-			//6.
 			var tab2Title = $("<a href='#tabs-2'>Entities</a>");
 			tab2Title.appendTo(li);
 
 			var tab1 = $("<div id='tabs-1' class='panel'></div>");
 			tab1.appendTo(tabs);
 
+			// Decribe the function of the tag weights to the user
+			var sliderHeaderTitle = $("<p id='slider-header-title' ><--- Less --- IMPORTANT --- More ---></p>");
+			sliderHeaderTitle.appendTo(tab1);
+
+			// Add each slider from tags and set its callback function
+			// TODO: 	- A POST request with all tags sent to the server for fresh points
 			var sliders = [];
 			for (var i = 0; i < tags.length; i++) {
 				sliders.push($("<p>" + tags[i].name + "</p><div id='slider" + i + "'></div>"));
 				sliders[i].appendTo(tab1);
 
+				console.log(tags[i].weight);
 				$("#slider" + i).slider({
-					value: 1,
+					value: tags[i].weight,
 					min: 0,
 					max: 1,
 					step: 0.2
@@ -136,6 +134,10 @@ var d3LoadedCallback = function() {
 			var table = $("<table></table>");
 			table.appendTo(tab2);
 
+			// Add each button from users and set its callback function
+			// TODO: 	- This could probably be simplified
+			//			- Checked/clicked state (using Checkbox button?)
+			//			- Tranlate to links?
 			var entities = [];
 			for (var i = 0; i < users.length; i++) {
 
@@ -153,6 +155,7 @@ var d3LoadedCallback = function() {
 					for (var j = 0; j < visibility.length; j++) {
 						if (visibility[j].username == id) {
 							visibility[j].enabled = !visibility[j].enabled;
+							//console.log(visibility[j].username + ", " + visibility[j].enabled);
 							if (visibility[j].enabled) $(this).addClass("button_clicked");
 							else $(this).removeClass("button_clicked");
 							toggleEntityVisiblity(visibility[j].enabled);
@@ -301,8 +304,15 @@ var d3LoadedCallback = function() {
 				.attr("cy", function(d) {
 				return d.y;
 			})
+				.style("stroke", function(d) {
+				return "dark" + d.colour;
+			})
+				.style("stroke-width", 2)
 				.style("fill", function(d) {
 				return d.colour;
+			})
+				.style("opacity", function(d) {
+				return 0.7;
 			})
 				.transition()
 				.duration(700)
@@ -326,6 +336,7 @@ var d3LoadedCallback = function() {
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "13px")
 				.style("text-anchor", "middle")
+				.attr("class", "shadow")
 				.text(function(d) {
 				return d.username;
 			});
@@ -351,8 +362,15 @@ var d3LoadedCallback = function() {
 					.attr("r", function(d) {
 					return 15;
 				})
+					.style("stroke", function(d) {
+					return "dark" + d.colour;
+				})
+					.style("stroke-width", 2)
 					.style("fill", function(d) {
-					return d3.rgb(d.colour);
+					return d.colour;
+				})
+					.style("opacity", function(d) {
+					return 0.7;
 				});
 
 				svg.selectAll("text")
@@ -369,6 +387,7 @@ var d3LoadedCallback = function() {
 					.attr("font-family", "sans-serif")
 					.attr("font-size", "13px")
 					.style("text-anchor", "middle")
+					.attr("class", "shadow")
 					.text(function(d) {
 					return d.username;
 				});
@@ -381,12 +400,34 @@ var d3LoadedCallback = function() {
 
 			data = scale(createData());
 
+			for (var i = 0; i < visibility.length; i++) {
+				//console.log(data[i].username + i);
+				console.log(visibility[i].username + i + ", " + visibility[i].enabled);
+			}
+
+			for (var i = 0; i < data.length; i++) {
+				//console.log(data[i].username + i);
+				console.log(data[i].username + i);
+			}
+
 			if (!enable) { // remove point
+				svg.selectAll('g')
+					.data(data, function(d) {
+					return (d.username);
+				})
+					.exit()
+					.transition()
+					.duration(700)
+					.attr("r", 0)
+					.remove();
+
 				svg.selectAll('circle')
 					.data(data, function(d) {
 					return (d.username);
 				})
-					.exit().transition()
+					.exit()
+					.transition()
+					.duration(700)
 					.attr("r", 0)
 					.remove();
 
@@ -398,12 +439,14 @@ var d3LoadedCallback = function() {
 					.remove();
 
 			} else { // add point
-				svg.selectAll("circle")
+				var g = svg.selectAll("g")
 					.data(data, function(d) {
 					return (d.username);
 				})
 					.enter()
-					.append("circle")
+					.append("g");
+
+				g.append('circle')
 					.on("mouseover", function(d) {
 					var sel = d3.select(this);
 					sel.moveToFront();
@@ -415,8 +458,15 @@ var d3LoadedCallback = function() {
 					.attr("cy", function(d) {
 					return d.y;
 				})
+					.style("stroke", function(d) {
+					return "dark" + d.colour;
+				})
+					.style("stroke-width", 2)
 					.style("fill", function(d) {
 					return d.colour;
+				})
+					.style("opacity", function(d) {
+					return 0.7;
 				})
 					.transition()
 					.duration(700)
@@ -424,12 +474,12 @@ var d3LoadedCallback = function() {
 					return 15;
 				});
 
-				svg.selectAll("text")
-					.data(data, function(d) {
-					return (d.username);
-				})
-					.enter()
-					.append("text")
+				g.append("svg:title")
+					.text(function(d) {
+					return d.username;
+				});
+
+				g.append("text")
 					.attr("dx", function(d) {
 					if (is_firefox) return d.x * 2;
 					return d.x;
@@ -440,6 +490,7 @@ var d3LoadedCallback = function() {
 					.attr("font-family", "sans-serif")
 					.attr("font-size", "13px")
 					.style("text-anchor", "middle")
+					.attr("class", "shadow")
 					.text(function(d) {
 					return d.username;
 				});

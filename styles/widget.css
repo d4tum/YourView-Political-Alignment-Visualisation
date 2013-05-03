@@ -25,12 +25,26 @@
 		float:left; 
 	}
 
+	text.shadow { 
+		stroke: eeeeee;
+		stroke-width: 2.5px;
+		opacity: 0.9; 
+	}
+
 	#controls {
     	overflow: hidden;
 	}
 
+	#slider-header-title {
+		text-align: center;
+	}
+
+	#slider-header-content {
+		text-align: center;
+	}
+
 	.button {
-		height: 3em;
+		height: 2.5em;
 		width: 250px;
 	}
 
@@ -47,7 +61,7 @@
     	overflow: auto;
 	}
 
-	/* For the tabs */
+	/* For the tabs to adjust the theme */
 	.ui-widget-content, .ui-widget-content a, .ui-widget-header, .ui-widget-header a, .ui-tabs-nav li .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { 
 		font-family: Verdana,Arial,sans-serif; 
 		font-size: 0.8em; 
