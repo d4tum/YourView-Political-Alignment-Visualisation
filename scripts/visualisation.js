@@ -228,6 +228,7 @@ var d3LoadedCallback = function() {
 
 			if (xRange > yRange) range = Math.ceil(xRange) + 2;
 			else range = Math.ceil(yRange) + 2;
+			console.log(range);
 		}
 
 		function createData() {
@@ -253,8 +254,8 @@ var d3LoadedCallback = function() {
 
 		function scale(dataset) {
 			for (var i = 0; i < dataset.length; i++) {
-				dataset[i].x = (dataset[i].x + (range / 2)) * 50;
-				dataset[i].y = (dataset[i].y + (range / 2)) * 50;
+				dataset[i].x = (dataset[i].x + (range / 2)) * 5;
+				dataset[i].y = (dataset[i].y + (range / 2)) * 5;
 				// points[i][j] = (points[i][j] + 5) * 50;
 			}
 			return dataset;
@@ -348,7 +349,7 @@ var d3LoadedCallback = function() {
 		}
 
 		function updatePlot() {
-			d3.json(chooseRandDummyFile(), function(json) {
+			d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
 				points = json;
 				findRange(points);
 				data = scale(createData());
