@@ -38,8 +38,9 @@
 	}
 
 	.button {
-		height: 2.5em;
+		height: 30px;
 		width: 250px;
+		font-size: 0.8em; 
 	}
 
 	.button_clicked {
