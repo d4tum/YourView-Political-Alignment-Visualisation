@@ -120,8 +120,11 @@ var d3LoadedCallback = function() {
 				sliders.push($("<p>" + tags[i].name + "</p><div id='slider" + i + "'></div>"));
 				sliders[i].appendTo(tab1);
 
-				$("#slider" + i).slider().slider("option", "min", -1).slider({
-					max: 1
+				$("#slider" + i).slider({
+					value: 1,
+					min: 0,
+					max: 1,
+					step: 0.2
 				}).on("slidestop", function(event, ui) {
 					updatePlot();
 				});
@@ -130,16 +133,28 @@ var d3LoadedCallback = function() {
 			var tab2 = $("<div id='tabs-2' class='panel'></div>");
 			tab2.appendTo(tabs);
 
+			var table = $("<table></table>");
+			table.appendTo(tab2);
+
 			var entities = [];
 			for (var i = 0; i < users.length; i++) {
-				entities.push($("<button id='" + users[i].username + "'>" + users[i].username + "</button>"));
-				entities[i].appendTo(tab2);
+
+				var tr = $("<tr></tr>");
+				tr.appendTo(table);
+
+				var td = $("<td></td>");
+				td.appendTo(tr);
+
+				entities.push($("<button id='" + users[i].username + "' class='button'>" + users[i].username + "</button>").addClass("button_clicked"));
+				entities[i].appendTo(td);
 
 				$("#" + users[i].username).click(function() {
 					var id = $(this).attr('id');
 					for (var j = 0; j < visibility.length; j++) {
 						if (visibility[j].username == id) {
 							visibility[j].enabled = !visibility[j].enabled;
+							if (visibility[j].enabled) $(this).addClass("button_clicked");
+							else $(this).removeClass("button_clicked");
 							toggleEntityVisiblity(visibility[j].enabled);
 						}
 					}
@@ -293,7 +308,7 @@ var d3LoadedCallback = function() {
 				.duration(700)
 				.attr("r", function(d) {
 				return 15;
-			})
+			});
 
 			g.append("svg:title")
 				.text(function(d) {
@@ -302,6 +317,7 @@ var d3LoadedCallback = function() {
 
 			g.append("text")
 				.attr("dx", function(d) {
+				if (is_firefox) return d.x * 2;
 				return d.x;
 			})
 				.attr("dy", function(d) {
