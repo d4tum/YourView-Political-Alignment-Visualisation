@@ -19,7 +19,7 @@
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#eeeeee',GradientType=0 ); /* IE6-8 */
 	}
 
-	#scatterplot {
+	#plot {
 		height: 600px;
 		width: 600px;
 		float:left; 
@@ -38,9 +38,8 @@
 	}
 
 	.button {
-		height: 30px;
+		height: 2.5em;
 		width: 250px;
-		font-size: 13px; 
 	}
 
 	.button_clicked {

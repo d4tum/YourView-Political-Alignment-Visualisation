@@ -1,11 +1,12 @@
-var w = 600
-var h = 600
-var range = 0;
+var w = 600;
+var h = 600;
+var padding = 60;
 var data = []; // the  datajoin object for d3
-var tags; // Relates to sliders
+var tags; // Tag wieghts for sliders
 var users; // user data (index corresponds to that of points.json)
-var points; // points (index corresponds to that of user_data.users from user_data.json)
-var visibility = []; // Utitlity assoc. array storing the state of en entitys visibility on the map
+var points; // points (index corresponds to the users from user_data.json)
+var visibility = []; // Utitlity association array storing the state of an entitys visibility on the map
+
 // For bug where text labels are only half their supposed x value
 // See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
 // for this solution.
@@ -22,8 +23,8 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
-	// link.href = 'styles/widget.css';
+	// link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
+	link.href = 'styles/widget.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -36,8 +37,8 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
-	// link.href = 'styles/absolution.css';
+	// link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
+	link.href = 'styles/absolution.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -76,10 +77,10 @@ var d3LoadedCallback = function() {
 	$(document).ready(function() {
 		// jQuery stuff to build DOM from this script
 		var widget = document.getElementById("yourview-visualization");
-		var scatterplot = $("<div id='scatterplot'></div>");
+		var plot = $("<div id='plot'></div>");
 		var controls = $("<div id='controls'></div>");
 
-		scatterplot.appendTo(widget);
+		plot.appendTo(widget);
 		controls.appendTo(widget);
 
 		// Initiealise the controls; the tabs.
@@ -124,7 +125,7 @@ var d3LoadedCallback = function() {
 					max: 1,
 					step: 0.2
 				}).on("slidestop", function(event, ui) {
-					updatePlot();
+					translate();
 				});
 			}
 
@@ -154,11 +155,11 @@ var d3LoadedCallback = function() {
 					var id = $(this).attr('id');
 					for (var j = 0; j < visibility.length; j++) {
 						if (visibility[j].username == id) {
-							visibility[j].enabled = !visibility[j].enabled;
-							//console.log(visibility[j].username + ", " + visibility[j].enabled);
-							if (visibility[j].enabled) $(this).addClass("button_clicked");
+							visibility[j].isVisible = !visibility[j].isVisible;
+							//console.log(visibility[j].username + ", " + visibility[j].isVisible);
+							if (visibility[j].isVisible) $(this).addClass("button_clicked");
 							else $(this).removeClass("button_clicked");
-							toggleEntityVisiblity(visibility[j].enabled);
+							toggleVisible();
 						}
 					}
 
@@ -172,49 +173,40 @@ var d3LoadedCallback = function() {
 
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~d3 stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-		var svg = d3.select("#scatterplot")
+		var svg = d3.select("#plot")
 			.append("svg")
 			.attr("width", w)
 			.attr("height", h);
 
 		// Retrieve user data from user_data.json
-		d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
-		// d3.json("json/user_data.json", function(json) {
+		// d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
+		d3.json("json/user_data.json", function(json) {
 			users = json.users;
 			tags = json.tags;
 			initControls();
-			initScatterplot();
+			initPlot();
 		});
 
-		function initScatterplot() {
-			d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-			// d3.json("json/points.json", function(json) {
-				points = json;
-				initEntityVisiblity();
-				findRange(points);
+		function initPlot() {
+			// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+			d3.json("json/points.json", function(json) {
+				points = scale(json);
+				initVisible();
 				data = createData();
-				plotData();
+				draw();
 			});
 		}
 
-		function initEntityVisiblity() {
+		function initVisible() {
 			for (var i = 0; i < users.length; i++) {
 				visibility.push({
 					username: users[i].username,
-					enabled: true
+					isVisible: true
 				});
 			}
 		}
 
-		Array.max = function(array) {
-			return Math.max.apply(Math, array);
-		};
-
-		Array.min = function(array) {
-			return Math.min.apply(Math, array);
-		};
-
-		function findRange(points) {
+		function scale(points) {
 			var xs = [];
 			var ys = [];
 
@@ -223,42 +215,47 @@ var d3LoadedCallback = function() {
 				ys.push(points[i][1]);
 			}
 
-			var xRange = Array.max(xs) - Array.min(xs);
-			var yRange = Array.max(ys) - Array.min(ys);
+			var xMin = d3.min(xs);
+			var xMax = d3.max(xs);
+			var yMin = d3.min(ys);
+			var yMax = d3.max(ys);
 
-			if (xRange > yRange) range = Math.ceil(xRange) + 2;
-			else range = Math.ceil(yRange) + 2;
-			console.log(range);
+			if (xMin < yMin) var min = xMin;
+			else var min = yMin;
+
+			if (xMax > yMax) var max = xMax;
+			else var max = yMax;
+
+			var linearScale = d3.scale.linear()
+				.domain([min, max])
+				.range([0 + padding, w - padding]);
+
+			var scaledPoints = []
+			for (var i = 0; i < points.length; i++) {
+				xs[i] = linearScale(xs[i]);
+				ys[i] = linearScale(ys[i]);
+				scaledPoints.push([xs[i], ys[i]]);
+			}
+
+			return scaledPoints;
 		}
 
 		function createData() {
 			var dataset = [];
 			// Add the users to the points
 			for (var i = 0; i < users.length; i++) {
-				if (visibility[i].enabled) {
-					dataset.push({
-						x: points[i][0],
-						y: points[i][1],
-						colour: users[i].colour,
-						cred: users[i].cred,
-						id: users[i].id,
-						index: users[i].index,
-						link: users[i].link,
-						primary: users[i].primary,
-						username: users[i].username
-					});
-				}
+				dataset.push({
+					x: points[i][0],
+					y: points[i][1],
+					colour: users[i].colour,
+					cred: users[i].cred,
+					id: users[i].id,
+					link: users[i].link,
+					primary: users[i].primary,
+					username: users[i].username
+				});
 			}
 
-			return dataset;
-		}
-
-		function scale(dataset) {
-			for (var i = 0; i < dataset.length; i++) {
-				dataset[i].x = (dataset[i].x + (range / 2)) * 3;
-				dataset[i].y = (dataset[i].y + (range / 2)) * 3;
-				// points[i][j] = (points[i][j] + 5) * 50;
-			}
 			return dataset;
 		}
 
@@ -267,16 +264,11 @@ var d3LoadedCallback = function() {
 		function chooseRandDummyFile() {
 			var array = [];
 
-			path1 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points1.json";
-			path2 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points2.json";
-			path3 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points3.json";
-			path4 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points4.json";
-			path5 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points5.json";
-			// path1 = "json/dummy_points1.json";
-			// path2 = "json/dummy_points2.json";
-			// path3 = "json/dummy_points3.json";
-			// path4 = "json/dummy_points4.json";
-			// path5 = "json/dummy_points5.json";
+			path1 = "json/dummy_points1.json";
+			path2 = "json/dummy_points2.json";
+			path3 = "json/dummy_points3.json";
+			path4 = "json/dummy_points4.json";
+			path5 = "json/dummy_points5.json";
 
 			array.push(path1);
 			array.push(path2);
@@ -294,10 +286,13 @@ var d3LoadedCallback = function() {
 			return array[index - 1];
 		}
 
-		function plotData() {
+		function draw() {
 			var g = svg.selectAll("g")
-				.data(scale(data)).enter()
-				.append("g");
+				.data(data).enter()
+				.append("g")
+				.style("opacity", function(d) {
+				return 0.8;
+			});
 
 			g.append("circle")
 				.on("mouseover", function(d) {
@@ -317,9 +312,6 @@ var d3LoadedCallback = function() {
 				.style("stroke-width", 2)
 				.style("fill", function(d) {
 				return d.colour;
-			})
-				.style("opacity", function(d) {
-				return 0.7;
 			})
 				.transition()
 				.duration(700)
@@ -343,16 +335,17 @@ var d3LoadedCallback = function() {
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "13px")
 				.style("text-anchor", "middle")
+				.attr("class", "shadow")
 				.text(function(d) {
 				return d.username;
 			});
 		}
 
-		function updatePlot() {
-			d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+		function translate() {
+			d3.json(chooseRandDummyFile(), function(json) {
 				points = json;
-				findRange(points);
-				data = scale(createData());
+				points = scale(points);
+				data = createData();
 
 				// enter() and append() are omitted for a transision()
 				svg.selectAll("circle")
@@ -374,9 +367,6 @@ var d3LoadedCallback = function() {
 					.style("stroke-width", 2)
 					.style("fill", function(d) {
 					return d.colour;
-				})
-					.style("opacity", function(d) {
-					return 0.7;
 				});
 
 				svg.selectAll("text")
@@ -401,105 +391,16 @@ var d3LoadedCallback = function() {
 			});
 		}
 
-		function toggleEntityVisiblity(enable) {
+		function toggleVisible() {
 
-			data = scale(createData());
-
-			for (var i = 0; i < visibility.length; i++) {
-				//console.log(data[i].username + i);
-				console.log(visibility[i].username + i + ", " + visibility[i].enabled);
-			}
-
-			for (var i = 0; i < data.length; i++) {
-				//console.log(data[i].username + i);
-				console.log(data[i].username + i);
-			}
-
-			if (!enable) { // remove point
-				svg.selectAll('g')
-					.data(data, function(d) {
-					return (d.username);
-				})
-					.exit()
-					.transition()
-					.duration(700)
-					.attr("r", 0)
-					.remove();
-
-				svg.selectAll('circle')
-					.data(data, function(d) {
-					return (d.username);
-				})
-					.exit()
-					.transition()
-					.duration(700)
-					.attr("r", 0)
-					.remove();
-
-				svg.selectAll('text')
-					.data(data, function(d) {
-					return (d.username);
-				})
-					.exit()
-					.remove();
-
-			} else { // add point
-				var g = svg.selectAll("g")
-					.data(data, function(d) {
-					return (d.username);
-				})
-					.enter()
-					.append("g");
-
-				g.append('circle')
-					.on("mouseover", function(d) {
-					var sel = d3.select(this);
-					sel.moveToFront();
-					console.log(d.username);
-				})
-					.attr("cx", function(d) {
-					return d.x;
-				})
-					.attr("cy", function(d) {
-					return d.y;
-				})
-					.style("stroke", function(d) {
-					return "dark" + d.colour;
-				})
-					.style("stroke-width", 2)
-					.style("fill", function(d) {
-					return d.colour;
-				})
-					.style("opacity", function(d) {
-					return 0.7;
-				})
-					.transition()
-					.duration(700)
-					.attr("r", function(d) {
-					return 15;
-				});
-
-				g.append("svg:title")
-					.text(function(d) {
-					return d.username;
-				});
-
-				g.append("text")
-					.attr("dx", function(d) {
-					if (is_firefox) return d.x * 2;
-					return d.x;
-				})
-					.attr("dy", function(d) {
-					return d.y + 35;
-				})
-					.attr("font-family", "sans-serif")
-					.attr("font-size", "13px")
-					.style("text-anchor", "middle")
-					.text(function(d) {
-					return d.username;
-				});
-			}
-
+			svg.selectAll('g')
+				.data(data, function(d) {
+				return (d.username);
+			})
+				.style("opacity", function(d, i) {
+				if (!visibility[i].isVisible) return 0.0;
+				else return 0.8;
+			});
 		}
 
 		d3.selection.prototype.moveToFront = function() {
