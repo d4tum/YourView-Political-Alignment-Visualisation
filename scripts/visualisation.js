@@ -1,6 +1,10 @@
+// Constants
 var w = 600;
 var h = 600;
 var padding = 60;
+var radius = 15;
+
+// Global vars
 var data = []; // the  datajoin object for d3
 var tags; // Tag wieghts for sliders
 var users; // user data (index corresponds to that of points.json)
@@ -118,7 +122,6 @@ var d3LoadedCallback = function() {
 				sliders.push($("<p>" + tags[i].name + "</p><div id='slider" + i + "'></div>"));
 				sliders[i].appendTo(tab1);
 
-				console.log(tags[i].weight);
 				$("#slider" + i).slider({
 					value: tags[i].weight,
 					min: 0,
@@ -156,7 +159,6 @@ var d3LoadedCallback = function() {
 					for (var j = 0; j < visibility.length; j++) {
 						if (visibility[j].username == id) {
 							visibility[j].isVisible = !visibility[j].isVisible;
-							//console.log(visibility[j].username + ", " + visibility[j].isVisible);
 							if (visibility[j].isVisible) $(this).addClass("button_clicked");
 							else $(this).removeClass("button_clicked");
 							toggleVisible();
@@ -242,7 +244,7 @@ var d3LoadedCallback = function() {
 
 		function createData() {
 			var dataset = [];
-			// Add the users to the points
+			// Merge users with points into an object
 			for (var i = 0; i < users.length; i++) {
 				dataset.push({
 					x: points[i][0],
@@ -283,23 +285,26 @@ var d3LoadedCallback = function() {
 			}
 
 			previousIndex = index;
+			console.log(array[index - 1]);
 			return array[index - 1];
 		}
 
 		function draw() {
 			var g = svg.selectAll("g")
-				.data(data).enter()
+				.data(data)
+				.enter()
 				.append("g")
 				.style("opacity", function(d) {
 				return 0.8;
-			});
-
-			g.append("circle")
+			})
 				.on("mouseover", function(d) {
 				var sel = d3.select(this);
 				sel.moveToFront();
 				console.log(d.username);
-			})
+			});
+
+			g.append("circle")
+
 				.attr("cx", function(d) {
 				return d.x;
 			})
@@ -316,7 +321,7 @@ var d3LoadedCallback = function() {
 				.transition()
 				.duration(700)
 				.attr("r", function(d) {
-				return 15;
+				return radius;
 			});
 
 			g.append("svg:title")
@@ -343,8 +348,8 @@ var d3LoadedCallback = function() {
 
 		function translate() {
 			d3.json(chooseRandDummyFile(), function(json) {
-				points = json;
-				points = scale(points);
+				points = scale(json);
+				// update datapoints
 				data = createData();
 
 				// enter() and append() are omitted for a transision()
@@ -358,16 +363,19 @@ var d3LoadedCallback = function() {
 					.attr("cy", function(d) {
 					return d.y;
 				})
-					.attr("r", function(d) {
-					return 15;
+					.attr("r", function(d, i) {
+					if (!visibility[i].isVisible) return radius - 5;
+					else return radius;
 				})
-					.style("stroke", function(d) {
-					return "dark" + d.colour;
+					.style("stroke", function(d, i) {
+					if (!visibility[i].isVisible) return "dimgray";
+					else return "dark" + d.colour;
 				})
 					.style("stroke-width", 2)
-					.style("fill", function(d) {
+					.style("fill", function(d, i) {
+					if (!visibility[i].isVisible) return "dimgraydimgray";
 					return d.colour;
-				});
+				})
 
 				svg.selectAll("text")
 					.data(data)
@@ -387,20 +395,40 @@ var d3LoadedCallback = function() {
 					return d.username;
 				});
 
-				console.log(data);
 			});
 		}
 
-		function toggleVisible() {
+		function toggleVisible(visible) {
 
-			svg.selectAll('g')
-				.data(data, function(d) {
-				return (d.username);
-			})
+			// svg.selectAll('g')
+			// 	.style("opacity", function(d, i) {
+			// 	if (!visibility[i].isVisible) return 0.0;
+			// 	else return 0.8;
+			// });
+			svg.selectAll('text')
+				.transition()
 				.style("opacity", function(d, i) {
 				if (!visibility[i].isVisible) return 0.0;
 				else return 0.8;
 			});
+
+			svg.selectAll('circle')
+				.transition()
+				.duration(500)
+				.attr("r", function(d, i) {
+				if (!visibility[i].isVisible) return radius - 5;
+				else return radius;
+			})
+				.style("stroke", function(d, i) {
+				if (!visibility[i].isVisible) return "dimgray";
+				else return "dark" + d.colour;
+			})
+				.style("stroke-width", 2)
+				.style("fill", function(d, i) {
+				if (!visibility[i].isVisible) return "dimgray";
+				return d.colour;
+			});
+
 		}
 
 		d3.selection.prototype.moveToFront = function() {
