@@ -9,7 +9,6 @@ var data = []; // the  datajoin object for d3
 var tags; // Tag wieghts for sliders
 var users; // user data (index corresponds to that of points.json)
 var points; // points (index corresponds to the users from user_data.json)
-var visibility = []; // Utitlity association array storing the state of an entitys visibility on the map
 
 // For bug where text labels are only half their supposed x value
 // See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
@@ -27,8 +26,8 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	// link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
-	link.href = 'styles/widget.css';
+	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
+	// link.href = 'styles/widget.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -41,8 +40,8 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	// link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
-	link.href = 'styles/absolution.css';
+	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
+	// link.href = 'styles/absolution.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -128,7 +127,7 @@ var d3LoadedCallback = function() {
 					max: 1,
 					step: 0.2
 				}).on("slidestop", function(event, ui) {
-					translate();
+					update();
 				});
 			}
 
@@ -151,17 +150,18 @@ var d3LoadedCallback = function() {
 				var td = $("<td></td>");
 				td.appendTo(tr);
 
-				entities.push($("<button id='" + users[i].username + "' class='button'>" + users[i].username + "</button>").addClass("button_clicked"));
+				entities.push($("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>").addClass("button_clicked"));
 				entities[i].appendTo(td);
 
-				$("#" + users[i].username).click(function() {
+				$("#" + users[i].id).click(function() {
 					var id = $(this).attr('id');
-					for (var j = 0; j < visibility.length; j++) {
-						if (visibility[j].username == id) {
-							visibility[j].isVisible = !visibility[j].isVisible;
-							if (visibility[j].isVisible) $(this).addClass("button_clicked");
+					for (var j = 0; j < users.length; j++) {
+						if (users[j].id == id) {
+							users[j].primary = !users[j].primary;
+							if (users[j].primary) $(this).addClass("button_clicked");
 							else $(this).removeClass("button_clicked");
-							toggleVisible();
+							toggleEnitiy();
+
 						}
 					}
 
@@ -181,8 +181,8 @@ var d3LoadedCallback = function() {
 			.attr("height", h);
 
 		// Retrieve user data from user_data.json
-		// d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
-		d3.json("json/user_data.json", function(json) {
+		d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
+		//d3.json("json/user_data.json", function(json) {
 			users = json.users;
 			tags = json.tags;
 			initControls();
@@ -190,22 +190,12 @@ var d3LoadedCallback = function() {
 		});
 
 		function initPlot() {
-			// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-			d3.json("json/points.json", function(json) {
+			d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+			//d3.json("json/points.json", function(json) {
 				points = scale(json);
-				initVisible();
 				data = createData();
 				draw();
 			});
-		}
-
-		function initVisible() {
-			for (var i = 0; i < users.length; i++) {
-				visibility.push({
-					username: users[i].username,
-					isVisible: true
-				});
-			}
 		}
 
 		function scale(points) {
@@ -266,11 +256,17 @@ var d3LoadedCallback = function() {
 		function chooseRandDummyFile() {
 			var array = [];
 
-			path1 = "json/dummy_points1.json";
-			path2 = "json/dummy_points2.json";
-			path3 = "json/dummy_points3.json";
-			path4 = "json/dummy_points4.json";
-			path5 = "json/dummy_points5.json";
+			path1 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points1.json";
+			path2 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points2.json";
+			path3 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points3.json";
+			path4 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points4.json";
+			path5 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points5.json";
+			
+			// path1 = "json/dummy_points1.json";
+			// path2 = "json/dummy_points2.json";
+			// path3 = "json/dummy_points3.json";
+			// path4 = "json/dummy_points4.json";
+			// path5 = "json/dummy_points5.json";
 
 			array.push(path1);
 			array.push(path2);
@@ -289,14 +285,17 @@ var d3LoadedCallback = function() {
 			return array[index - 1];
 		}
 
+		function sortPrimaryZBelow(a, b) {
+			if (a.primary && !b.primary) return -1;
+			else if (!a.primary && b.primary) return 1;
+			else return 0;
+		}
+
 		function draw() {
 			var g = svg.selectAll("g")
 				.data(data)
 				.enter()
 				.append("g")
-				.style("opacity", function(d) {
-				return 0.8;
-			})
 				.on("mouseover", function(d) {
 				var sel = d3.select(this);
 				sel.moveToFront();
@@ -311,6 +310,10 @@ var d3LoadedCallback = function() {
 				.attr("cy", function(d) {
 				return d.y;
 			})
+				.style("opacity", function(d) {
+				return 0.8;
+			})
+
 				.style("stroke", function(d) {
 				return "dark" + d.colour;
 			})
@@ -324,11 +327,6 @@ var d3LoadedCallback = function() {
 				return radius;
 			});
 
-			g.append("svg:title")
-				.text(function(d) {
-				return d.username;
-			});
-
 			g.append("text")
 				.attr("dx", function(d) {
 				if (is_firefox) return d.x * 2;
@@ -340,18 +338,30 @@ var d3LoadedCallback = function() {
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "13px")
 				.style("text-anchor", "middle")
-				.attr("class", "shadow")
 				.text(function(d) {
 				return d.username;
 			});
+
+			g.append("svg:title")
+				.text(function(d) {
+				return d.username;
+			});
+
 		}
 
-		function translate() {
-			d3.json(chooseRandDummyFile(), function(json) {
+		function update() {
+			d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
 				points = scale(json);
 				// update datapoints
 				data = createData();
 
+				svg.selectAll("g")
+					.data(data)
+					.on("mouseover", function(d) {
+					var sel = d3.select(this);
+					sel.moveToFront();
+					console.log(d.username);
+				});
 				// enter() and append() are omitted for a transision()
 				svg.selectAll("circle")
 					.data(data)
@@ -364,17 +374,17 @@ var d3LoadedCallback = function() {
 					return d.y;
 				})
 					.attr("r", function(d, i) {
-					if (!visibility[i].isVisible) return radius - 5;
-					else return radius;
+					if (users[i].primary) return radius;
+					else return radius - 5;
 				})
 					.style("stroke", function(d, i) {
-					if (!visibility[i].isVisible) return "dimgray";
-					else return "dark" + d.colour;
+					if (users[i].primary) return "dark" + d.colour;
+					else return "dimgray";
 				})
 					.style("stroke-width", 2)
 					.style("fill", function(d, i) {
-					if (!visibility[i].isVisible) return "dimgraydimgray";
-					return d.colour;
+					if (users[i].primary) return d.colour;
+					else return "dimgray";
 				})
 
 				svg.selectAll("text")
@@ -398,35 +408,43 @@ var d3LoadedCallback = function() {
 			});
 		}
 
-		function toggleVisible(visible) {
+		function toggleEnitiy() {
 
 			// svg.selectAll('g')
 			// 	.style("opacity", function(d, i) {
 			// 	if (!visibility[i].isVisible) return 0.0;
 			// 	else return 0.8;
 			// });
+
 			svg.selectAll('text')
 				.transition()
 				.style("opacity", function(d, i) {
-				if (!visibility[i].isVisible) return 0.0;
-				else return 0.8;
+				if (users[i].primary) return 1.0;
+				else return 0.0;
 			});
 
 			svg.selectAll('circle')
 				.transition()
 				.duration(500)
 				.attr("r", function(d, i) {
-				if (!visibility[i].isVisible) return radius - 5;
-				else return radius;
+				if (users[i].primary) return radius;
+				else return radius - 5;
 			})
 				.style("stroke", function(d, i) {
-				if (!visibility[i].isVisible) return "dimgray";
-				else return "dark" + d.colour;
+				if (users[i].primary) return "dark" + d.colour;
+				else return "dimgray";
 			})
 				.style("stroke-width", 2)
 				.style("fill", function(d, i) {
-				if (!visibility[i].isVisible) return "dimgray";
-				return d.colour;
+				if (users[i].primary) return d.colour;
+				return "dimgray";
+			});
+
+			svg.selectAll("g")
+				.on("mouseover", function(d) {
+				var sel = d3.select(this);
+				sel.moveToFront();
+				console.log(d.username);
 			});
 
 		}

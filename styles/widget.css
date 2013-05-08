@@ -33,10 +33,6 @@
 		text-align: center;
 	}
 
-	#slider-header-content {
-		text-align: center;
-	}
-
 	.button {
 		height: 2.5em;
 		width: 250px;
@@ -58,5 +54,5 @@
 	/* For the tabs to adjust the theme */
 	.ui-widget-content, .ui-widget-content a, .ui-widget-header, .ui-widget-header a, .ui-tabs-nav li .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { 
 		font-family: Verdana,Arial,sans-serif; 
-		font-size: 0.8em; 
+		font-size: 13px; 
 	}
