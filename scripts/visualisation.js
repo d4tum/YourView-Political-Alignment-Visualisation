@@ -15,36 +15,36 @@ var points; // points (index corresponds to the users from user_data.json)
 // for this solution.
 var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
-// Load each style sheet
-var doc = document; // shortcut
+// // Load each style sheet
+// var doc = document; // shortcut
 
-// Pull in the main css file
-var cssId = 'widgetCss';
-if (!doc.getElementById(cssId)) {
-	var head = doc.getElementsByTagName('head')[0];
-	var link = doc.createElement('link');
-	link.id = cssId;
-	link.rel = 'stylesheet';
-	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
-	// link.href = 'styles/widget.css';
-	link.media = 'all';
-	head.appendChild(link);
-}
+// // Pull in the main css file
+// var cssId = 'widgetCss';
+// if (!doc.getElementById(cssId)) {
+// 	var head = doc.getElementsByTagName('head')[0];
+// 	var link = doc.createElement('link');
+// 	link.id = cssId;
+// 	link.rel = 'stylesheet';
+// 	link.type = 'text/css';
+// 	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
+// 	// link.href = 'styles/widget.css';
+// 	link.media = 'all';
+// 	head.appendChild(link);
+// }
 
-// Grab the theme css file
-var cssId = 'themeCss';
-if (!doc.getElementById(cssId)) {
-	var head = doc.getElementsByTagName('head')[0];
-	var link = doc.createElement('link');
-	link.id = cssId;
-	link.rel = 'stylesheet';
-	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
-	// link.href = 'styles/absolution.css';
-	link.media = 'all';
-	head.appendChild(link);
-}
+// // Grab the theme css file
+// var cssId = 'themeCss';
+// if (!doc.getElementById(cssId)) {
+// 	var head = doc.getElementsByTagName('head')[0];
+// 	var link = doc.createElement('link');
+// 	link.id = cssId;
+// 	link.rel = 'stylesheet';
+// 	link.type = 'text/css';
+// 	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
+// 	// link.href = 'styles/absolution.css';
+// 	link.media = 'all';
+// 	head.appendChild(link);
+// }
 
 $(document).ready(function() {
 	// jQuery stuff to build DOM from this script
