@@ -26,8 +26,8 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
-	// link.href = 'styles/widget.css';
+	// link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
+	link.href = 'styles/widget.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -40,8 +40,8 @@ if (!doc.getElementById(cssId)) {
 	link.id = cssId;
 	link.rel = 'stylesheet';
 	link.type = 'text/css';
-	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
-	// link.href = 'styles/absolution.css';
+	// link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
+	link.href = 'styles/absolution.css';
 	link.media = 'all';
 	head.appendChild(link);
 }
@@ -181,8 +181,8 @@ var d3LoadedCallback = function() {
 			.attr("height", h);
 
 		// Retrieve user data from user_data.json
-		d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
-		//d3.json("json/user_data.json", function(json) {
+		// d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
+		d3.json("json/user_data.json", function(json) {
 			users = json.users;
 			tags = json.tags;
 			initControls();
@@ -190,8 +190,8 @@ var d3LoadedCallback = function() {
 		});
 
 		function initPlot() {
-			d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-			//d3.json("json/points.json", function(json) {
+			// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+			d3.json("json/points.json", function(json) {
 				points = scale(json);
 				data = createData();
 				draw();
@@ -256,17 +256,11 @@ var d3LoadedCallback = function() {
 		function chooseRandDummyFile() {
 			var array = [];
 
-			path1 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points1.json";
-			path2 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points2.json";
-			path3 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points3.json";
-			path4 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points4.json";
-			path5 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points5.json";
-			
-			// path1 = "json/dummy_points1.json";
-			// path2 = "json/dummy_points2.json";
-			// path3 = "json/dummy_points3.json";
-			// path4 = "json/dummy_points4.json";
-			// path5 = "json/dummy_points5.json";
+			path1 = "json/dummy_points1.json";
+			path2 = "json/dummy_points2.json";
+			path3 = "json/dummy_points3.json";
+			path4 = "json/dummy_points4.json";
+			path5 = "json/dummy_points5.json";
 
 			array.push(path1);
 			array.push(path2);
@@ -350,7 +344,7 @@ var d3LoadedCallback = function() {
 		}
 
 		function update() {
-			d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+			d3.json(chooseRandDummyFile(), function(json) {
 				points = scale(json);
 				// update datapoints
 				data = createData();
