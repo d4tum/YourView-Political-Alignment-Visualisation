@@ -1,8 +1,10 @@
 // Constants
 var w = 600;
 var h = 600;
-var padding = 60;
-var radius = 15;
+var svgPadding = 60;
+var circleRaduis = 12;
+var raduisShrinkage = 2;
+var labelOffest = 25;
 
 // Global vars
 var data = []; // the  datajoin object for d3
@@ -15,44 +17,13 @@ var points; // points (index corresponds to the users from user_data.json)
 // for this solution.
 var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
-// // Load each style sheet
-// var doc = document; // shortcut
-
-// // Pull in the main css file
-// var cssId = 'widgetCss';
-// if (!doc.getElementById(cssId)) {
-// 	var head = doc.getElementsByTagName('head')[0];
-// 	var link = doc.createElement('link');
-// 	link.id = cssId;
-// 	link.rel = 'stylesheet';
-// 	link.type = 'text/css';
-// 	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/widget.css';
-// 	// link.href = 'styles/widget.css';
-// 	link.media = 'all';
-// 	head.appendChild(link);
-// }
-
-// // Grab the theme css file
-// var cssId = 'themeCss';
-// if (!doc.getElementById(cssId)) {
-// 	var head = doc.getElementsByTagName('head')[0];
-// 	var link = doc.createElement('link');
-// 	link.id = cssId;
-// 	link.rel = 'stylesheet';
-// 	link.type = 'text/css';
-// 	link.href = 'https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/styles/absolution.css';
-// 	// link.href = 'styles/absolution.css';
-// 	link.media = 'all';
-// 	head.appendChild(link);
-// }
-
 $(document).ready(function() {
 	// jQuery stuff to build DOM from this script
 	var widget = document.getElementById("yourview-visualization");
-	var plot = $("<div id='plot'></div>");
+	var map = $("<div id='map'></div>");
 	var controls = $("<div id='controls'></div>");
 
-	plot.appendTo(widget);
+	map.appendTo(widget);
 	controls.appendTo(widget);
 
 	// Initiealise the controls; the tabs.
@@ -83,20 +54,50 @@ $(document).ready(function() {
 		var sliderHeaderTitle = $("<p id='slider-header-title' ><--- Less --- IMPORTANT --- More ---></p>");
 		sliderHeaderTitle.appendTo(tab1);
 
-		// Add each slider from tags and set its callback function
-		// TODO: 	- A POST request with all tags sent to the server for fresh points
+		// Tag weight sliders
 		var sliders = [];
 		for (var i = 0; i < tags.length; i++) {
-			sliders.push($("<p>" + tags[i].name + "</p><div id='slider" + i + "'></div>"));
+			sliders.push($("<p>" + tags[i].name + "</p><div id='" + tags[i].id + "'></div>"));
 			sliders[i].appendTo(tab1);
 
-			$("#slider" + i).slider({
+			$("#" + tags[i].id).slider({
 				value: tags[i].weight,
 				min: 0,
 				max: 1,
-				step: 0.2
+				step: 0.25
 			}).on("slidestop", function(event, ui) {
-				update();
+				// Find the id of the slider just changed
+				var id = $(this).attr('id');
+				// Set the tag weight to the value of the slider
+				for (var j = 0; j < tags.length; j++) {
+					if (tags[j].id == id) tags[j].weight = $(this).slider("value");
+				}
+				// Parse tags array into a string to append to the API url
+				var str = "";
+				for (var i = 0; i < tags.length; i++) {
+					str += "&tag[" + tags[i].id + "]=" + tags[i].weight;
+				};
+
+				console.log(str);
+				// make an ajax request
+				// NYI: update in the callback, test on server
+				$.ajax({
+					type: 'GET',
+					dataType: 'json',
+					url: 'http://staging.yourview.org.au/visualization/points.json?forum=1' + str,
+					success: function(json) {
+						// alert("json loaded successfully.")
+						console.log("json loaded successfully.");
+						points = scale(json);
+						// update datapoints
+						data = createData();
+						update();
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus, errorThrown);
+					}
+				});
+				// update();
 			});
 		}
 
@@ -106,10 +107,7 @@ $(document).ready(function() {
 		var table = $("<table></table>");
 		table.appendTo(tab2);
 
-		// Add each button from users and set its callback function
-		// TODO: 	- This could probably be simplified
-		//			- Checked/clicked state (using Checkbox button?)
-		//			- Tranlate to links?
+		// Entity buttons
 		var entities = [];
 		for (var i = 0; i < users.length; i++) {
 
@@ -119,7 +117,10 @@ $(document).ready(function() {
 			var td = $("<td></td>");
 			td.appendTo(tr);
 
-			entities.push($("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>").addClass("button_clicked"));
+			if (users[i].primary) var button = $("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>").addClass("button_clicked");
+			else var button = $("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>");
+
+			entities.push(button);
 			entities[i].appendTo(td);
 
 			$("#" + users[i].id).click(function() {
@@ -144,23 +145,23 @@ $(document).ready(function() {
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~d3 stuff~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	var svg = d3.select("#plot")
+	var svg = d3.select("#map")
 		.append("svg")
 		.attr("width", w)
 		.attr("height", h);
 
 	// Retrieve user data from user_data.json
 	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
-	//d3.json("json/user_data.json", function(json) {
+	// d3.json("json/user_data.json", function(json) {
 		users = json.users;
 		tags = json.tags;
 		initControls();
-		initPlot();
+		initMap();
 	});
 
-	function initPlot() {
+	function initMap() {
 		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		//d3.json("json/points.json", function(json) {
+		// d3.json("json/points.json", function(json) {
 			points = scale(json);
 			data = createData();
 			draw();
@@ -189,7 +190,7 @@ $(document).ready(function() {
 
 		var linearScale = d3.scale.linear()
 			.domain([min, max])
-			.range([0 + padding, w - padding]);
+			.range([0 + svgPadding, w - svgPadding]);
 
 		var scaledPoints = []
 		for (var i = 0; i < points.length; i++) {
@@ -225,17 +226,17 @@ $(document).ready(function() {
 	function chooseRandDummyFile() {
 		var array = [];
 
-		path1 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points1.json";
-		path2 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points2.json";
-		path3 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points3.json";
-		path4 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points4.json";
-		path5 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points5.json";
+		// path1 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points1.json";
+		// path2 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points2.json";
+		// path3 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points3.json";
+		// path4 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points4.json";
+		// path5 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points5.json";
 
-		// path1 = "json/dummy_points1.json";
-		// path2 = "json/dummy_points2.json";
-		// path3 = "json/dummy_points3.json";
-		// path4 = "json/dummy_points4.json";
-		// path5 = "json/dummy_points5.json";
+		path1 = "json/dummy_points1.json";
+		path2 = "json/dummy_points2.json";
+		path3 = "json/dummy_points3.json";
+		path4 = "json/dummy_points4.json";
+		path5 = "json/dummy_points5.json";
 
 		array.push(path1);
 		array.push(path2);
@@ -245,12 +246,11 @@ $(document).ready(function() {
 
 		// Make sure we choose an index different to the last one.
 		while (true) {
-			index = Math.floor((Math.random() * 5) + 1);
+			index = Math.floor((Math.random() * array.length) + 1);
 			if (previousIndex != index) break;
 		}
 
 		previousIndex = index;
-		console.log(array[index - 1]);
 		return array[index - 1];
 	}
 
@@ -272,7 +272,6 @@ $(document).ready(function() {
 		});
 
 		g.append("circle")
-
 			.attr("cx", function(d) {
 			return d.x;
 		})
@@ -282,21 +281,20 @@ $(document).ready(function() {
 			.style("opacity", function(d) {
 			return 0.8;
 		})
-
-		// 	.style("stroke", function(d, i) {
-		// 	if (users[i].primary) return "dark" + d.colour;
-		// 	else return "dimgray";
-		// })
-		// 	.style("stroke-width", 2)
-		.style("fill", function(d, i) {
+			.style("stroke", function(d, i) {
+			if (users[i].primary) return "dark" + d.colour;
+			else return "dimgrey";
+		})
+			.style("stroke-width", 1)
+			.style("fill", function(d, i) {
 			if (users[i].primary) return d.colour;
-			else return "dimgray";
+			return "grey";
 		})
 			.transition()
 			.duration(700)
 			.attr("r", function(d, i) {
-			if (users[i].primary) return radius;
-			else return radius - 5;
+			if (users[i].primary) return circleRaduis;
+			else return circleRaduis - raduisShrinkage;
 		});
 
 		g.append("text")
@@ -305,7 +303,7 @@ $(document).ready(function() {
 			return d.x;
 		})
 			.attr("dy", function(d) {
-			return d.y + 35;
+			return d.y + labelOffest;
 		})
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "13px")
@@ -330,6 +328,7 @@ $(document).ready(function() {
 
 	function update() {
 		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+		// d3.json(chooseRandDummyFile(), function(json) {
 			points = scale(json);
 			// update datapoints
 			data = createData();
@@ -353,19 +352,19 @@ $(document).ready(function() {
 				return d.y;
 			})
 				.attr("r", function(d, i) {
-				if (users[i].primary) return radius;
-				else return radius - 5;
+				if (users[i].primary) return circleRaduis;
+				else return circleRaduis - raduisShrinkage;
 			})
-
-			// 	.style("stroke", function(d, i) {
-			// 	if (users[i].primary) return "dark" + d.colour;
-			// 	else return "dimgray";
-			// })
-			// 	.style("stroke-width", 2)
-			.style("fill", function(d, i) {
+				.style("stroke", function(d, i) {
+				if (users[i].primary) return "dark" + d.colour;
+				else return "dimgrey";
+			})
+				.style("stroke-width", 1)
+				.style("fill", function(d, i) {
 				if (users[i].primary) return d.colour;
-				else return "dimgray";
+				return "grey";
 			});
+
 
 			svg.selectAll("text")
 				.data(data)
@@ -376,7 +375,7 @@ $(document).ready(function() {
 				return d.x;
 			})
 				.attr("dy", function(d) {
-				return d.y + 35;
+				return d.y + labelOffest;
 			})
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "13px")
@@ -407,18 +406,18 @@ $(document).ready(function() {
 			.transition()
 			.duration(500)
 			.attr("r", function(d, i) {
-			if (users[i].primary) return radius;
-			else return radius - 5;
+			if (users[i].primary) return circleRaduis;
+			else return circleRaduis - raduisShrinkage;
 		})
-
-		// 	.style("stroke", function(d, i) {
-		// 	if (users[i].primary) return "dark" + d.colour;
-		// 	else return "dimgray";
-		// })
-		// 	.style("stroke-width", 2)
-		.style("fill", function(d, i) {
+			.style("stroke", function(d, i) {
+			if (users[i].primary && users[i].colour == "grey") return "dimgrey";
+			else if (users[i].primary) return "dark" + d.colour;
+			else return "dimgrey";
+		})
+			.style("stroke-width", 1)
+			.style("fill", function(d, i) {
 			if (users[i].primary) return d.colour;
-			return "dimgray";
+			return "grey";
 		});
 
 		// svg.selectAll("g")
