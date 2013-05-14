@@ -89,15 +89,14 @@ $(document).ready(function() {
 						// alert("json loaded successfully.")
 						console.log("json loaded successfully.");
 						points = scale(json);
-						// update datapoints
 						data = createData();
-						update();
+						// update();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(textStatus, errorThrown);
 					}
 				});
-				// update();
+				update();
 			});
 		}
 
@@ -151,8 +150,8 @@ $(document).ready(function() {
 		.attr("height", h);
 
 	// Retrieve user data from user_data.json
-	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
-	// d3.json("json/user_data.json", function(json) {
+	// d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
+	d3.json("json/user_data.json", function(json) {
 		users = json.users;
 		tags = json.tags;
 		initControls();
@@ -160,8 +159,8 @@ $(document).ready(function() {
 	});
 
 	function initMap() {
-		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		// d3.json("json/points.json", function(json) {
+		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+		d3.json("json/points.json", function(json) {
 			points = scale(json);
 			data = createData();
 			draw();
@@ -327,8 +326,8 @@ $(document).ready(function() {
 	}
 
 	function update() {
-		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		// d3.json(chooseRandDummyFile(), function(json) {
+		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+		d3.json(chooseRandDummyFile(), function(json) {
 			points = scale(json);
 			// update datapoints
 			data = createData();
