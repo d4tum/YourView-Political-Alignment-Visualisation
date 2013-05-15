@@ -5,6 +5,7 @@
 	#yourview-visualization {
 		text-align: center;
 		width: 900px;
+		height: 600px
    		overflow: hidden;
    		margin-top: 15px;
 		margin-left: 250px;
@@ -55,7 +56,7 @@
 		background: linear-gradient(to bottom,  #adadad 0%,#d7d7d7 100%); /* W3C */
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#adadad', endColorstr='#d7d7d7',GradientType=0 ); /* IE6-8 */
 
-		color: #5C5C5C; /* Change text colour */
+		color: #000000; /* Change text colour */
 	}
 
 	.container{
