@@ -86,6 +86,7 @@ $(document).ready(function() {
 					dataType: 'json',
 					url: 'http://staging.yourview.org.au/visualization/points.json?forum=1' + str,
 					success: function(json) {
+						points = scale(json);
 						update();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
@@ -340,7 +341,8 @@ $(document).ready(function() {
 	function update() {
 		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
 		// d3.json(chooseRandDummyFile(), function(json) {
-			points = scale(json);
+			
+			// points = scale(json);
 			// update datapoints
 			data = createData();
 
