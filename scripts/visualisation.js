@@ -3,7 +3,7 @@ var w = 600;
 var h = 600;
 var svgPadding = 60;
 var circleRaduis = 12;
-var raduisShrinkage = 4;
+var raduisShrinkage = 2;
 var labelOffest = 25;
 
 // Global vars
@@ -87,15 +87,16 @@ $(document).ready(function() {
 					url: 'http://staging.yourview.org.au/visualization/points.json?forum=1' + str,
 					success: function(json) {
 						// alert("json loaded successfully.")
-						// console.log("json loaded successfully.");
-						// points = scale(json);
-						update();
+						console.log("json loaded successfully.");
+						points = scale(json);
+						data = createData();
+						// update();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(textStatus, errorThrown);
 					}
 				});
-				// update();
+				update();
 			});
 		}
 
@@ -115,7 +116,8 @@ $(document).ready(function() {
 			var td = $("<td></td>");
 			td.appendTo(tr);
 
-			if (users[i].primary) var button = $("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>");
+			if (users[i].primary) var button = $("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>").addClass("button_clicked");
+			else var button = $("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>");
 
 			entities.push(button);
 			entities[i].appendTo(td);
@@ -125,8 +127,8 @@ $(document).ready(function() {
 				for (var j = 0; j < users.length; j++) {
 					if (users[j].id == id) {
 						users[j].primary = !users[j].primary;
-						if (users[j].primary) $(this).removeClass("button_clicked");
-						else $(this).addClass("button_clicked");
+						if (users[j].primary) $(this).addClass("button_clicked");
+						else $(this).removeClass("button_clicked");
 						toggleEnitiy();
 
 					}
@@ -146,36 +148,19 @@ $(document).ready(function() {
 		.append("svg")
 		.attr("width", w)
 		.attr("height", h);
-		//.attr("pointer-events", "all")
-		//.append('svg:g')
-		//.call(d3.behavior.zoom().on("zoom", redraw))
-		//.append('svg:g');
-
-	// Zoom and pan logic
-	// see - http://stackoverflow.com/questions/7871425/is-there-a-way-to-zoom-into-a-graph-layout-done-using-d3
-	// svg.append('svg:rect')
-	// 	.attr('width', w)
-	// 	.attr('height', h)
-	// 	.attr('fill', '#eeeeee');
 
 	// Retrieve user data from user_data.json
-	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
-	// d3.json("json/user_data.json", function(json) {
+	// d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
+	d3.json("json/user_data.json", function(json) {
 		users = json.users;
 		tags = json.tags;
 		initControls();
 		initMap();
 	});
 
-	function redraw() {
-		console.log("here", d3.event.translate, d3.event.scale);
-		svg.attr("transform",
-			"translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-	}
-
 	function initMap() {
-		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		//d3.json("json/points.json", function(json) {
+		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+		d3.json("json/points.json", function(json) {
 			points = scale(json);
 			data = createData();
 			draw();
@@ -268,6 +253,12 @@ $(document).ready(function() {
 		return array[index - 1];
 	}
 
+	function sortPrimaryZBelow(a, b) {
+		if (a.primary && !b.primary) return -1;
+		else if (!a.primary && b.primary) return 1;
+		else return 0;
+	}
+
 	function draw() {
 		var g = svg.selectAll("g")
 			.data(data)
@@ -320,7 +311,7 @@ $(document).ready(function() {
 			return d.username;
 		});
 
-		g.append("title")
+		g.append("svg:title")
 			.text(function(d) {
 			return d.username;
 		});
@@ -336,7 +327,7 @@ $(document).ready(function() {
 
 	function update() {
 		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		// d3.json(chooseRandDummyFile(), function(json) {
+		d3.json(chooseRandDummyFile(), function(json) {
 			points = scale(json);
 			// update datapoints
 			data = createData();
@@ -392,7 +383,7 @@ $(document).ready(function() {
 				return d.username;
 			});
 
-		// });
+		});
 	}
 
 	function toggleEnitiy() {
