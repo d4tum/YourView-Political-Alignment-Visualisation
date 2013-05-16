@@ -88,7 +88,7 @@ $(document).ready(function() {
 					url: 'http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1' + str,
 					success: function(json) {
 						pointDict = scale(json);
-						// update();
+						update();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(textStatus, errorThrown);
