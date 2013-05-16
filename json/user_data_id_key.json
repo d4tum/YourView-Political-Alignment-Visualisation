@@ -1,0 +1,85 @@
+{
+    "tags": [
+        {
+            "id": 5, 
+            "name": "Asylum Seekers", 
+            "weight": "0.75"
+        }, 
+        {
+            "id": 3, 
+            "name": "Economy & Business", 
+            "weight": "0.5"
+        }, 
+        {
+            "id": 1, 
+            "name": "Environment", 
+            "weight": "0.75"
+        }, 
+        {
+            "id": 6, 
+            "name": "Politics", 
+            "weight": 1.0
+        }, 
+        {
+            "id": 4, 
+            "name": "Social Policy", 
+            "weight": 1.0
+        }
+    ], 
+    "users": {
+        "2430": {
+            "colour": "grey", 
+            "cred": 8.94, 
+            "id": 2430, 
+            "index": 0, 
+            "link": "<a href=\"/users/2430\">Michael MacWilliam</a> <span class='credibility'>(8.9)</span>", 
+            "primary": false, 
+            "username": "Michael MacWilliam"
+        }, 
+        "2517": {
+            "colour": "red", 
+            "cred": 2.51, 
+            "id": 2517, 
+            "index": 1, 
+            "link": "<a href=\"/users/2517\">Labor</a> <span class='credibility'>(2.5)</span>", 
+            "primary": true, 
+            "username": "Labor"
+        }, 
+        "2518": {
+            "colour": "blue", 
+            "cred": 1.52, 
+            "id": 2518, 
+            "index": 2, 
+            "link": "<a href=\"/users/2518\">Liberals</a> <span class='credibility'>(1.5)</span>", 
+            "primary": true, 
+            "username": "Liberals"
+        }, 
+        "2519": {
+            "colour": "blue", 
+            "cred": 1.52, 
+            "id": 2519, 
+            "index": 3, 
+            "link": "<a href=\"/users/2519\">Nationals</a> <span class='credibility'>(1.5)</span>", 
+            "primary": true, 
+            "username": "Nationals"
+        }, 
+        "2520": {
+            "colour": "green", 
+            "cred": 1.54, 
+            "id": 2520, 
+            "index": 4, 
+            "link": "<a href=\"/users/2520\">Greens</a> <span class='credibility'>(1.5)</span>", 
+            "primary": true, 
+            "username": "Greens"
+        }, 
+        "2543": {
+            "colour": "grey", 
+            "cred": 1.26, 
+            "id": 2543, 
+            "index": 5, 
+            "link": "<a href=\"/users/2543\">Andrew Wilcox</a> <span class='credibility'>(1.3)</span>", 
+            "primary": false, 
+            "username": "Andrew Wilcox"
+        }
+    }
+}

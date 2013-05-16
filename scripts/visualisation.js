@@ -3,14 +3,15 @@ var w = 600;
 var h = 600;
 var svgPadding = 60;
 var circleRaduis = 12;
-var raduisShrinkage = 2;
+var raduisShrinkage = 4;
 var labelOffest = 25;
 
 // Global vars
-var data = []; // the  datajoin object for d3
+var data; // the  datajoin object for d3
 var tags; // Tag wieghts for sliders
-var users; // user data (index corresponds to that of points.json)
-var points; // points (index corresponds to the users from user_data.json)
+var userDict; // user data (index corresponds to that of points.json)
+var pointDict; // points (index corresponds to the users from user_data.json)
+var primaryFlags; // Dnother dictionary, key is the id, value is the boolean primary
 
 // For bug where text labels are only half their supposed x value
 // See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
@@ -51,7 +52,7 @@ $(document).ready(function() {
 		tab1.appendTo(tabs);
 
 		// Decribe the function of the tag weights to the user
-		var sliderHeaderTitle = $("<p id='slider-header-title' ><--- Less --- IMPORTANT --- More ---></p>");
+		var sliderHeaderTitle = $("<p id='slider-header-title' ><-- Less -- IMPORTANT -- More --></p>");
 		sliderHeaderTitle.appendTo(tab1);
 
 		// Tag weight sliders
@@ -80,19 +81,20 @@ $(document).ready(function() {
 
 				console.log(str);
 				// make an ajax request
-				// NYI: update in the callback, test on server
+
 				$.ajax({
 					type: 'GET',
 					dataType: 'json',
-					url: 'http://staging.yourview.org.au/visualization/points.json?forum=1' + str,
+					url: 'http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1' + str,
 					success: function(json) {
-						points = scale(json);
-						update();
+						pointDict = scale(json);
+						// update();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(textStatus, errorThrown);
 					}
 				});
+				// update();
 			});
 		}
 
@@ -104,33 +106,34 @@ $(document).ready(function() {
 
 		// Entity buttons
 		var entities = [];
-		for (var i = 0; i < users.length; i++) {
+		var i = 0;
+		for (var key in userDict) {
+			if (userDict.hasOwnProperty(key)) {
 
-			var tr = $("<tr></tr>");
-			tr.appendTo(table);
+				var tr = $("<tr></tr>");
+				tr.appendTo(table);
 
-			var td = $("<td></td>");
-			td.appendTo(tr);
+				var td = $("<td></td>");
+				td.appendTo(tr);
 
-			if (users[i].primary) var button = $("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>");
-			else var button = $("<button id='" + users[i].id + "' class='button'>" + users[i].username + "</button>").addClass("button_clicked");
+				if (userDict[key].primary) {
+					var button = $("<button id='" + key + "' class='button'>" + userDict[key].username + "</button>");
 
-			entities.push(button);
-			entities[i].appendTo(td);
+					// else var button = $("<button id='" + key + "' class='button'>" + userDict[key].username + "</button>").addClass("button_clicked");
 
-			$("#" + users[i].id).click(function() {
-				var id = $(this).attr('id');
-				for (var j = 0; j < users.length; j++) {
-					if (users[j].id == id) {
-						users[j].primary = !users[j].primary;
-						if (users[j].primary) $(this).removeClass("button_clicked");
+					entities.push(button);
+					entities[i].appendTo(td);
+					i++;
+
+					$("#" + key).click(function() {
+						var id = $(this).attr('id');
+						primaryFlags[id].primary = !primaryFlags[id].primary;
+						if (primaryFlags[id].primary) $(this).removeClass("button_clicked");
 						else $(this).addClass("button_clicked");
 						toggleEnitiy();
-
-					}
+					});
 				}
-
-			});
+			}
 		}
 
 		$(function() {
@@ -144,10 +147,10 @@ $(document).ready(function() {
 		.append("svg")
 		.attr("width", w)
 		.attr("height", h);
-		// .attr("pointer-events", "all")
-		// .append('svg:g')
-		// .call(d3.behavior.zoom().on("zoom", redraw))
-		// .append('svg:g');
+	// .attr("pointer-events", "all")
+	// .append('svg:g')
+	// .call(d3.behavior.zoom().on("zoom", redraw))
+	// .append('svg:g');
 
 	// Zoom and pan logic
 	// see - http://stackoverflow.com/questions/7871425/is-there-a-way-to-zoom-into-a-graph-layout-done-using-d3
@@ -157,10 +160,11 @@ $(document).ready(function() {
 	// 	.attr('fill', '#eeeeee');
 
 	// Retrieve user data from user_data.json
-	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1", function(json) {
-	// d3.json("json/user_data.json", function(json) {
-		users = json.users;
+	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1&id_key=1", function(json) {
+	// d3.json("json/user_data_id_key.json", function(json) {
+		userDict = json.users;
 		tags = json.tags;
+		initPrimaryFlags();
 		initControls();
 		initMap();
 	});
@@ -172,21 +176,23 @@ $(document).ready(function() {
 	// }
 
 	function initMap() {
-		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		// d3.json("json/points.json", function(json) {
-			points = scale(json);
+		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1", function(json) {
+		// d3.json("json/points_id_key.json", function(json) {
+			pointDict = scale(json);
 			data = createData();
 			draw();
 		});
 	}
 
-	function scale(points) {
+	function scale(json) {
 		var xs = [];
 		var ys = [];
 
-		for (var i = 0; i < points.length; i++) {
-			xs.push(points[i][0]);
-			ys.push(points[i][1]);
+		for (var key in json) {
+			if (json.hasOwnProperty(key)) {
+				xs.push(json[key][0]);
+				ys.push(json[key][1]);
+			}
 		}
 
 		var xMin = d3.min(xs);
@@ -204,30 +210,49 @@ $(document).ready(function() {
 			.domain([min, max])
 			.range([0 + svgPadding, w - svgPadding]);
 
-		var scaledPoints = []
-		for (var i = 0; i < points.length; i++) {
-			xs[i] = linearScale(xs[i]);
-			ys[i] = linearScale(ys[i]);
-			scaledPoints.push([xs[i], ys[i]]);
+		var i = 0;
+		for (var key in json) {
+			if (json.hasOwnProperty(key)) {
+				json[key][0] = linearScale(xs[i]);
+				json[key][1] = linearScale(ys[i]);
+				i++;
+			}
 		}
 
-		return scaledPoints;
+		return json;
+	}
+
+	function initPrimaryFlags() {
+		primaryFlags = {};
+		for (var key in userDict) {
+			if (userDict.hasOwnProperty(key)) {
+				primaryFlags[key] = {
+					primary: userDict[key].primary
+				};
+			}
+		}
+	}
+
+	function isPrimary(d) {
+		return primaryFlags[d.id].primary ? true : false;
 	}
 
 	function createData() {
+
 		var dataset = [];
-		// Merge users with points into an object
-		for (var i = 0; i < users.length; i++) {
-			dataset.push({
-				x: points[i][0],
-				y: points[i][1],
-				colour: users[i].colour,
-				cred: users[i].cred,
-				id: users[i].id,
-				link: users[i].link,
-				primary: users[i].primary,
-				username: users[i].username
-			});
+		for (var key in userDict) {
+			if (userDict.hasOwnProperty(key)) {
+				dataset.push({
+					x: pointDict[key][0],
+					y: pointDict[key][1],
+					colour: userDict[key].colour,
+					cred: userDict[key].cred,
+					id: key,
+					link: userDict[key].link,
+					primary: userDict[key].primary,
+					username: userDict[key].username
+				});
+			}
 		}
 
 		return dataset;
@@ -244,17 +269,17 @@ $(document).ready(function() {
 		// path4 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points4.json";
 		// path5 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points5.json";
 
-		path1 = "json/dummy_points1.json";
-		path2 = "json/dummy_points2.json";
-		path3 = "json/dummy_points3.json";
-		path4 = "json/dummy_points4.json";
-		path5 = "json/dummy_points5.json";
+		path1 = "json/points_id_key1.json";
+		path2 = "json/points_id_key2.json";
+		path3 = "json/points_id_key3.json";
+		// path4 = "json/dummy_points4.json";
+		// path5 = "json/dummy_points5.json";
 
 		array.push(path1);
 		array.push(path2);
 		array.push(path3);
-		array.push(path4);
-		array.push(path5);
+		// array.push(path4);
+		// array.push(path5);
 
 		// Make sure we choose an index different to the last one.
 		while (true) {
@@ -266,11 +291,11 @@ $(document).ready(function() {
 		return array[index - 1];
 	}
 
-	function sortPrimaryZBelow(a, b) {
-		if (a.primary && !b.primary) return -1;
-		else if (!a.primary && b.primary) return 1;
-		else return 0;
-	}
+	// function sortPrimaryZBelow(a, b) {
+	// 	if (a.primary && !b.primary) return -1;
+	// 	else if (!a.primary && b.primary) return 1;
+	// 	else return 0;
+	// }
 
 	function draw() {
 		var g = svg.selectAll("g")
@@ -293,19 +318,19 @@ $(document).ready(function() {
 			.style("opacity", function(d) {
 			return 0.8;
 		})
-			.style("stroke", function(d, i) {
-			if (users[i].primary) return "dark" + d.colour;
+			.style("stroke", function(d) {
+			if (d.primary) return "dark" + d.colour;
 			else return "dimgrey";
 		})
 			.style("stroke-width", 1)
-			.style("fill", function(d, i) {
-			if (users[i].primary) return d.colour;
+			.style("fill", function(d) {
+			if (d.primary) return d.colour;
 			return "grey";
 		})
 			.transition()
 			.duration(700)
 			.attr("r", function(d, i) {
-			if (users[i].primary) return circleRaduis;
+			if (d.primary) return circleRaduis;
 			else return circleRaduis - raduisShrinkage;
 		});
 
@@ -331,18 +356,18 @@ $(document).ready(function() {
 
 		svg.selectAll('text')
 			.transition()
-			.style("opacity", function(d, i) {
-			if (users[i].primary) return 1.0;
+			.style("opacity", function(d) {
+			if (d.primary) return 1.0;
 			else return 0.0;
 		});
 
 	}
 
 	function update() {
-		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+		//d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
 		// d3.json(chooseRandDummyFile(), function(json) {
-			
-			// points = scale(json);
+
+			// pointDict = scale(json);
 			// update datapoints
 			data = createData();
 
@@ -364,17 +389,17 @@ $(document).ready(function() {
 				.attr("cy", function(d) {
 				return d.y;
 			})
-				.attr("r", function(d, i) {
-				if (users[i].primary) return circleRaduis;
+				.attr("r", function(d) {
+				if (isPrimary(d)) return circleRaduis;
 				else return circleRaduis - raduisShrinkage;
 			})
-				.style("stroke", function(d, i) {
-				if (users[i].primary) return "dark" + d.colour;
+				.style("stroke", function(d) {
+				if (isPrimary(d)) return "dark" + d.colour;
 				else return "dimgrey";
 			})
 				.style("stroke-width", 1)
-				.style("fill", function(d, i) {
-				if (users[i].primary) return d.colour;
+				.style("fill", function(d) {
+				if (isPrimary(d)) return d.colour;
 				return "grey";
 			});
 
@@ -397,7 +422,7 @@ $(document).ready(function() {
 				return d.username;
 			});
 
-		// });
+		//});
 	}
 
 	function toggleEnitiy() {
@@ -410,27 +435,30 @@ $(document).ready(function() {
 
 		svg.selectAll('text')
 			.transition()
-			.style("opacity", function(d, i) {
-			if (users[i].primary) return 1.0;
+			.style("opacity", function(d) {
+			if (isPrimary(d)) return 1.0;
 			else return 0.0;
 		});
 
 		svg.selectAll('circle')
 			.transition()
 			.duration(500)
-			.attr("r", function(d, i) {
-			if (users[i].primary) return circleRaduis;
+			.attr("r", function(d) {
+			if (isPrimary(d)) return circleRaduis;
 			else return circleRaduis - raduisShrinkage;
 		})
-			.style("stroke", function(d, i) {
-			if (users[i].primary && users[i].colour == "grey") return "dimgrey";
-			else if (users[i].primary) return "dark" + d.colour;
-			else return "dimgrey";
+			.style("stroke", function(d) {
+			if ((isPrimary(d)) && d.colour == "grey") return "dimgrey";
+			else if (isPrimary(d)) {
+				return "dark" + d.colour;
+			} else {
+				return "dimgrey";
+			}
 		})
 			.style("stroke-width", 1)
-			.style("fill", function(d, i) {
-			if (users[i].primary) return d.colour;
-			return "grey";
+			.style("fill", function(d) {
+			if (isPrimary(d)) return d.colour;
+			else return "grey";
 		});
 
 		// svg.selectAll("g")
