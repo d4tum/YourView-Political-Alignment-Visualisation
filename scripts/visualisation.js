@@ -162,8 +162,8 @@ $(document).ready(function() {
 	// 	.attr('fill', '#eeeeee');
 
 	// Retrieve user data from user_data.json
-	//d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1&id_key=1", function(json) {
-	d3.json("json/user_data_id_key.json", function(json) {
+	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1&id_key=1", function(json) {
+	// d3.json("json/user_data_id_key.json", function(json) {
 		userDict = json.users;
 		tags = json.tags;
 		initPrimaryFlags();
@@ -178,8 +178,8 @@ $(document).ready(function() {
 	// }
 
 	function initMap() {
-		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1", function(json) {
-		d3.json("json/points_id_key.json", function(json) {
+		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1", function(json) {
+		// d3.json("json/points_id_key.json", function(json) {
 			pointDict = scale(json);
 			data = createData();
 			draw();
