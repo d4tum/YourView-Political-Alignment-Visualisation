@@ -366,7 +366,7 @@ $(document).ready(function() {
 	}
 
 	function update() {
-		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
+		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
 		// d3.json(chooseRandDummyFile(), function(json) {
 
 			// pointDict = scale(json);
