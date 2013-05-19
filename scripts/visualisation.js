@@ -79,10 +79,10 @@ $(document).ready(function() {
 					str += "&tag[" + tags[i].id + "]=" + tags[i].weight;
 				};
 
-				console.log(str);
-				// make an ajax request
+				// DEBUG
+				//console.log(str);
 
-				
+				// make an ajax request
 				$.ajax({
 					type: 'GET',
 					dataType: 'json',
@@ -95,7 +95,7 @@ $(document).ready(function() {
 						console.log(textStatus, errorThrown);
 					}
 				});
-				
+
 				// update();
 			});
 		}
@@ -149,9 +149,10 @@ $(document).ready(function() {
 		.append("svg")
 		.attr("width", w)
 		.attr("height", h);
+	// Zoom and pan stuff
 	// .attr("pointer-events", "all")
 	// .append('svg:g')
-	// .call(d3.behavior.zoom().on("zoom", redraw))
+	// .call(d3.behavior.zoom().on("zoom", reenter))
 	// .append('svg:g');
 
 	// Zoom and pan logic
@@ -163,7 +164,7 @@ $(document).ready(function() {
 
 	// Retrieve user data from user_data.json
 	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1&id_key=1", function(json) {
-	// d3.json("json/user_data_id_key.json", function(json) {
+		// d3.json("json/user_data_id_key.json", function(json) {
 		userDict = json.users;
 		tags = json.tags;
 		initPrimaryFlags();
@@ -171,7 +172,8 @@ $(document).ready(function() {
 		initMap();
 	});
 
-	// function redraw() {
+	// Zoom and pan utility
+	// function reenter() {
 	// 	console.log("here", d3.event.translate, d3.event.scale);
 	// 	svg.attr("transform",
 	// 		"translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
@@ -179,12 +181,16 @@ $(document).ready(function() {
 
 	function initMap() {
 		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1", function(json) {
-		// d3.json("json/points_id_key.json", function(json) {
+			// d3.json("json/points_id_key.json", function(json) {
 			pointDict = scale(json);
 			data = createData();
-			draw();
+			enter();
 		});
 	}
+
+	// Map the input domain given in the x and y coordunates 
+	// to the output range defined by the width - padding
+	// This coyld be done in enter/upade when setting x and y attributes.
 
 	function scale(json) {
 		var xs = [];
@@ -224,6 +230,8 @@ $(document).ready(function() {
 		return json;
 	}
 
+	// Set the boolean primary state array for all dots
+
 	function initPrimaryFlags() {
 		primaryFlags = {};
 		for (var key in userDict) {
@@ -235,12 +243,15 @@ $(document).ready(function() {
 		}
 	}
 
+	// Boolean function returns true if the dot is set to primary
+
 	function isPrimary(d) {
 		return primaryFlags[d.id].primary ? true : false;
 	}
 
-	function createData() {
+	// Combines user data and point data into the d3 data object.
 
+	function createData() {
 		var dataset = [];
 		for (var key in userDict) {
 			if (userDict.hasOwnProperty(key)) {
@@ -260,6 +271,7 @@ $(document).ready(function() {
 		return dataset;
 	}
 
+	// Used for testing
 	var previousIndex;
 
 	function chooseRandDummyFile() {
@@ -290,20 +302,36 @@ $(document).ready(function() {
 		}
 
 		previousIndex = index;
+		console.log(array[index - 1]);
 		return array[index - 1];
 	}
 
+	// An Aattempt at setting a higher z-order for grey dots
 	// function sortPrimaryZBelow(a, b) {
 	// 	if (a.primary && !b.primary) return -1;
 	// 	else if (!a.primary && b.primary) return 1;
 	// 	else return 0;
 	// }
 
-	function draw() {
+	// Key function
+	// see - http://bost.ocks.org/mike/selection/#key
+
+	function id(d) {
+		return d.id;
+	}
+
+	// The d3 enter event wrapper.
+	// This is called only once, after the page is first loaded
+	// Not a remove event is not used in this script.
+
+	function enter() {
 		var g = svg.selectAll("g")
-			.data(data)
+			.data(data, id)
 			.enter()
 			.append("g")
+			.sort(function(a, b) {
+			return d3.descending(isPrimary(a), isPrimary(b));
+		})
 			.on("mouseover", function(d) {
 			var sel = d3.select(this);
 			sel.moveToFront();
@@ -365,67 +393,74 @@ $(document).ready(function() {
 
 	}
 
+	// The d3 update event wrapper.
+	// This is called on subsequent updates of points from changing the sliders.
+
 	function update() {
+		// Testing stuff
 		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		// d3.json(chooseRandDummyFile(), function(json) {
+		//d3.json(chooseRandDummyFile(), function(json) {
 
-			// pointDict = scale(json);
-			// update datapoints
-			data = createData();
+		//pointDict = scale(json);
 
-			svg.selectAll("g")
-				.data(data)
-				.on("mouseover", function(d) {
-				var sel = d3.select(this);
-				sel.moveToFront();
-				console.log(d.username);
-			});
-			// enter() and append() are omitted for a transision()
-			svg.selectAll("circle")
-				.data(data)
-				.transition()
-				.duration(1100)
-				.attr("cx", function(d) {
-				return d.x;
-			})
-				.attr("cy", function(d) {
-				return d.y;
-			})
-				.attr("r", function(d) {
-				if (isPrimary(d)) return circleRaduis;
-				else return circleRaduis - raduisShrinkage;
-			})
-				.style("stroke", function(d) {
-				if (isPrimary(d)) return "dark" + d.colour;
-				else return "dimgrey";
-			})
-				.style("stroke-width", 1)
-				.style("fill", function(d) {
-				if (isPrimary(d)) return d.colour;
-				return "grey";
-			});
+		// Update the data with new points
+		data = createData();
 
+		svg.selectAll("g")
+			.data(data, id)
+			.on("mouseover", function(d) {
+			var sel = d3.select(this);
+			sel.moveToFront();
+			console.log(d.username);
+		});
 
-			svg.selectAll("text")
-				.data(data)
-				.transition()
-				.duration(1100)
-				.attr("dx", function(d) {
-				if (is_firefox) return d.x * 2;
-				return d.x;
-			})
-				.attr("dy", function(d) {
-				return d.y + labelOffset;
-			})
-				.attr("font-family", "sans-serif")
-				.attr("font-size", "13px")
-				.style("text-anchor", "middle")
-				.text(function(d) {
-				return d.username;
-			});
+		// enter() and append() are omitted for a transision
+		svg.selectAll("circle")
+			.data(data, id)
+			.transition()
+			.duration(1100)
+			.attr("cx", function(d) {
+			return d.x;
+		})
+			.attr("cy", function(d) {
+			return d.y;
+		})
+			.attr("r", function(d) {
+			if (isPrimary(d)) return circleRaduis;
+			else return circleRaduis - raduisShrinkage;
+		})
+			.style("stroke", function(d) {
+			if (isPrimary(d)) return "dark" + d.colour;
+			else return "dimgrey";
+		})
+			.style("stroke-width", 1)
+			.style("fill", function(d) {
+			if (isPrimary(d)) return d.colour;
+			return "grey";
+		});
+
+		svg.selectAll("text")
+			.data(data, id)
+			.transition()
+			.duration(1100)
+			.attr("dx", function(d) {
+			if (is_firefox) return d.x * 2;
+			return d.x;
+		})
+			.attr("dy", function(d) {
+			return d.y + labelOffset;
+		})
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "13px")
+			.style("text-anchor", "middle")
+			.text(function(d) {
+			return d.username;
+		});
 
 		//});
 	}
+
+	// This is Called when buttons are toggled un the entity tab
 
 	function toggleEnitiy() {
 
@@ -435,16 +470,21 @@ $(document).ready(function() {
 		// 	else return 0.8;
 		// });
 
+		// Hide the text if it dot is not a primary
 		svg.selectAll('text')
-			.data(data)
+			.data(data, id)
 			.transition()
 			.style("opacity", function(d) {
 			if (isPrimary(d)) return 1.0;
 			else return 0.0;
 		});
 
+		// Set the dot to grey and smaller when not primary
 		svg.selectAll('circle')
-			.data(data)
+			.data(data, id)
+			.sort(function(a, b) {
+			return d3.descending(isPrimary(a), isPrimary(b));
+		})
 			.transition()
 			.duration(500)
 			.attr("r", function(d) {
@@ -474,6 +514,7 @@ $(document).ready(function() {
 
 	}
 
+	// Brings the dot being hovered over to the front
 	d3.selection.prototype.moveToFront = function() {
 		return this.each(function() {
 			this.parentNode.appendChild(this);
