@@ -4,7 +4,7 @@ var h = 600;
 var svgPadding = 60;
 var circleRaduis = 12;
 var raduisShrinkage = 4;
-var labelOffest = 25;
+var labelOffset = 25;
 
 // Global vars
 var data; // the  datajoin object for d3
@@ -321,18 +321,18 @@ $(document).ready(function() {
 			return 0.8;
 		})
 			.style("stroke", function(d) {
-			if (d.primary) return "dark" + d.colour;
+			if (isPrimary(d)) return "dark" + d.colour;
 			else return "dimgrey";
 		})
 			.style("stroke-width", 1)
 			.style("fill", function(d) {
-			if (d.primary) return d.colour;
+			if (isPrimary(d)) return d.colour;
 			return "grey";
 		})
 			.transition()
 			.duration(700)
 			.attr("r", function(d, i) {
-			if (d.primary) return circleRaduis;
+			if (isPrimary(d)) return circleRaduis;
 			else return circleRaduis - raduisShrinkage;
 		});
 
@@ -342,7 +342,7 @@ $(document).ready(function() {
 			return d.x;
 		})
 			.attr("dy", function(d) {
-			return d.y + labelOffest;
+			return d.y + labelOffset;
 		})
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "13px")
@@ -359,7 +359,7 @@ $(document).ready(function() {
 		svg.selectAll('text')
 			.transition()
 			.style("opacity", function(d) {
-			if (d.primary) return 1.0;
+			if (isPrimary(d)) return 1.0;
 			else return 0.0;
 		});
 
@@ -415,7 +415,7 @@ $(document).ready(function() {
 				return d.x;
 			})
 				.attr("dy", function(d) {
-				return d.y + labelOffest;
+				return d.y + labelOffset;
 			})
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "13px")
