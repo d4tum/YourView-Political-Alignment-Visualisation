@@ -320,6 +320,12 @@ $(document).ready(function() {
 		return d.id;
 	}
 
+	// Called by sort() to order grey dots ontop of coloured dots
+
+	function primaryUnderneath(a, b) {
+		return d3.descending(isPrimary(a), isPrimary(b));
+	}
+
 	// The d3 enter event wrapper.
 	// This is called only once, after the page is first loaded
 	// Not a remove event is not used in this script.
@@ -329,9 +335,7 @@ $(document).ready(function() {
 			.data(data, id)
 			.enter()
 			.append("g")
-			.sort(function(a, b) {
-			return d3.descending(isPrimary(a), isPrimary(b));
-		})
+			.sort(primaryUnderneath)
 			.on("mouseover", function(d) {
 			var sel = d3.select(this);
 			sel.moveToFront();
@@ -346,7 +350,7 @@ $(document).ready(function() {
 			return d.y;
 		})
 			.style("opacity", function(d) {
-			return 0.8;
+			return 0.7;
 		})
 			.style("stroke", function(d) {
 			if (isPrimary(d)) return "dark" + d.colour;
@@ -374,6 +378,10 @@ $(document).ready(function() {
 		})
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "13px")
+			.style("opacity", function(d) {
+			if (isPrimary(d)) return 1.0;
+			else return 0.0;
+		})
 			.style("text-anchor", "middle")
 			.text(function(d) {
 			return d.username;
@@ -382,13 +390,6 @@ $(document).ready(function() {
 		g.append("svg:title")
 			.text(function(d) {
 			return d.username;
-		});
-
-		svg.selectAll('text')
-			.transition()
-			.style("opacity", function(d) {
-			if (isPrimary(d)) return 1.0;
-			else return 0.0;
 		});
 
 	}
@@ -473,7 +474,6 @@ $(document).ready(function() {
 		// Hide the text if it dot is not a primary
 		svg.selectAll('text')
 			.data(data, id)
-			.transition()
 			.style("opacity", function(d) {
 			if (isPrimary(d)) return 1.0;
 			else return 0.0;
@@ -482,9 +482,7 @@ $(document).ready(function() {
 		// Set the dot to grey and smaller when not primary
 		svg.selectAll('circle')
 			.data(data, id)
-			.sort(function(a, b) {
-			return d3.descending(isPrimary(a), isPrimary(b));
-		})
+			.sort(primaryUnderneath)
 			.transition()
 			.duration(500)
 			.attr("r", function(d) {
