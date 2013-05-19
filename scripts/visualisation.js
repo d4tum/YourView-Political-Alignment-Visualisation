@@ -505,6 +505,10 @@ $(document).ready(function() {
 			else return "grey";
 		});
 
+		svg.selectAll("svg:title")
+			.text(function(d) {
+			return d.username;
+		});
 		// svg.selectAll("g")
 		// 	.on("mouseover", function(d) {
 		// 	var sel = d3.select(this);
