@@ -474,6 +474,8 @@ $(document).ready(function() {
 		// Hide the text if it dot is not a primary
 		svg.selectAll('text')
 			.data(data, id)
+			.transition()
+			.duration(500)
 			.style("opacity", function(d) {
 			if (isPrimary(d)) return 1.0;
 			else return 0.0;
