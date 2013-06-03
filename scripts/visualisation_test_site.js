@@ -1,17 +1,22 @@
+// Copyright (c) 2013, Matthew Gregory Browne (reversed) moc.liamg@azgbdo
+
+// Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 // Constants
 var w = 600;
 var h = 600;
-var svgPadding = 60;
-var circleRaduis = 12;
-var raduisShrinkage = 4;
-var labelOffset = 25;
+var svgPadding = 60; // Used for scaling to ensure visibility of whole circles
+var circleRaduis = 12; // Raduis of a large coloured circle
+var raduisShrinkage = 4; // Amount the raduis shrink by when changing to a small grey circle
+var labelOffset = 25; // The offset of the text label relative to the y-axis
 
 // Global vars
 var data; // the  datajoin object for d3
 var tags; // Tag wieghts for sliders
 var userDict; // user data (index corresponds to that of points.json)
 var pointDict; // points (index corresponds to the users from user_data.json)
-var primaryFlags; // Dnother dictionary, key is the id, value is the boolean primary
+var showcased; // Stores boolean state of showcased for a key is the id, value is the boolean showcase
 
 // For bug where text labels are only half their supposed x value
 // See http://stackoverflow.com/questions/7000190/detect-all-firefox-versions-in-js
@@ -27,7 +32,8 @@ $(document).ready(function() {
 	map.appendTo(widget);
 	controls.appendTo(widget);
 
-	// Initiealise the controls; the tabs.
+	// Initialise the controls, tabs, sliders and buttons.
+	// Called once when the visualisation is first setup
 
 	function initControls() {
 		var tabs = $("<div id='tabs' class='container'></div>");
@@ -56,6 +62,7 @@ $(document).ready(function() {
 		sliderHeaderTitle.appendTo(tab1);
 
 		// Tag weight sliders
+		// Iterate through tags adding the name and weight to each slider
 		var sliders = [];
 		for (var i = 0; i < tags.length; i++) {
 			sliders.push($("<p>" + tags[i].name + "</p><div id='" + tags[i].id + "'></div>"));
@@ -66,37 +73,36 @@ $(document).ready(function() {
 				min: 0,
 				max: 1,
 				step: 0.25
-			}).on("slidestop", function(event, ui) {
+			}).on("slidestop", function(event, ui) { // Event listener for slider stop.
 				// Find the id of the slider just changed
 				var id = $(this).attr('id');
+
 				// Set the tag weight to the value of the slider
 				for (var j = 0; j < tags.length; j++) {
 					if (tags[j].id == id) tags[j].weight = $(this).slider("value");
 				}
-				// Parse tags array into a string to append to the API url
+
+				// Parse the tags info into a string to append to the API url
 				var str = "";
 				for (var i = 0; i < tags.length; i++) {
 					str += "&tag[" + tags[i].id + "]=" + tags[i].weight;
 				};
 
-				// DEBUG
-				//console.log(str);
-
-				// make an ajax request
+				// ajax get the new points given tag weights
 				$.ajax({
 					type: 'GET',
 					dataType: 'json',
-					url: 'http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1' + str,
+					url: '/visualization/points.json?forum=1&id_key=1' + str,
 					success: function(json) {
+						// scale new points
 						pointDict = scale(json);
+						// update the visualisation
 						update();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(textStatus, errorThrown);
 					}
 				});
-
-				// update();
 			});
 		}
 
@@ -106,34 +112,42 @@ $(document).ready(function() {
 		var table = $("<table></table>");
 		table.appendTo(tab2);
 
-		// Entity buttons
-		var entities = [];
-		var i = 0;
+		// Entity buttons are added to this array
+		// Iterate through every user an add a button for notable users
 		for (var key in userDict) {
 			if (userDict.hasOwnProperty(key)) {
+				// Only create buttons for notable users
+				if (userDict[key].notable) {
+					var tr = $("<tr></tr>");
+					tr.appendTo(table);
 
-				var tr = $("<tr></tr>");
-				tr.appendTo(table);
+					var td = $("<td></td>");
+					td.appendTo(tr);
 
-				var td = $("<td></td>");
-				td.appendTo(tr);
-
-				if (userDict[key].primary) {
 					var button = $("<button id='" + key + "' class='button'>" + userDict[key].username + "</button>");
+					console.log(key + " " + userDict[key].username);
 
-					// else var button = $("<button id='" + key + "' class='button'>" + userDict[key].username + "</button>").addClass("button_clicked");
+					if (!userDict[key].showcase)
+						button.addClass("button_clicked");
 
-					entities.push(button);
-					entities[i].appendTo(td);
-					i++;
+					button.appendTo(td);
+					// CLick listener
 
-					$("#" + key).click(function() {
+					button.click(function() {
+						// Grab the id which was set as the key
 						var id = $(this).attr('id');
-						primaryFlags[id].primary = !primaryFlags[id].primary;
-						if (primaryFlags[id].primary) $(this).removeClass("button_clicked");
+						console.log(id + "");
+						// toggle the boolean in showcased
+						showcased[id].showcase = !showcased[id].showcase;
+						// If the circle is large and coloured, remove the clicked state overlay
+						if (showcased[id].showcase) $(this).removeClass("button_clicked");
+						// else it is grey and small, so show its has been toggled
 						else $(this).addClass("button_clicked");
-						toggleEnitiy();
+						// call the toggle function
+						toggleEntity();
 					});
+
+
 				}
 			}
 		}
@@ -163,11 +177,10 @@ $(document).ready(function() {
 	// 	.attr('fill', '#eeeeee');
 
 	// Retrieve user data from user_data.json
-	d3.json("http://staging.yourview.org.au/visualization/user_data.json?forum=1&id_key=1", function(json) {
-	// d3.json("json/user_data_id_key.json", function(json) {
+	d3.json("json/user_data.json", function(json) {
 		userDict = json.users;
 		tags = json.tags;
-		initPrimaryFlags();
+		initShowcased();
 		initControls();
 		initMap();
 	});
@@ -180,8 +193,7 @@ $(document).ready(function() {
 	// }
 
 	function initMap() {
-		d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1&id_key=1", function(json) {
-		// d3.json("json/points_id_key.json", function(json) {
+		d3.json("json/points.json", function(json) {
 			pointDict = scale(json);
 			data = createData();
 			enter();
@@ -190,7 +202,7 @@ $(document).ready(function() {
 
 	// Map the input domain given in the x and y coordunates 
 	// to the output range defined by the width - padding
-	// This coyld be done in enter/upade when setting x and y attributes.
+	// This could also be done in enter/update when setting x and y attributes.
 
 	function scale(json) {
 		var xs = [];
@@ -230,23 +242,23 @@ $(document).ready(function() {
 		return json;
 	}
 
-	// Set the boolean primary state array for all dots
+	// Set the boolean showcase state array for all points
 
-	function initPrimaryFlags() {
-		primaryFlags = {};
+	function initShowcased() {
+		showcased = {};
 		for (var key in userDict) {
 			if (userDict.hasOwnProperty(key)) {
-				primaryFlags[key] = {
-					primary: userDict[key].primary
+				showcased[key] = {
+					showcase: userDict[key].showcase
 				};
 			}
 		}
 	}
 
-	// Boolean function returns true if the dot is set to primary
+	// Boolean function returns true if the dot is set to showcase
 
-	function isPrimary(d) {
-		return primaryFlags[d.id].primary ? true : false;
+	function isShowcased(d) {
+		return showcased[d.id].showcase ? true : false;
 	}
 
 	// Combines user data and point data into the d3 data object.
@@ -261,8 +273,10 @@ $(document).ready(function() {
 					colour: userDict[key].colour,
 					cred: userDict[key].cred,
 					id: key,
+					index: userDict[key].index,
 					link: userDict[key].link,
-					primary: userDict[key].primary,
+					notable: userDict[key].notable,
+					showcase: userDict[key].showcase,
 					username: userDict[key].username
 				});
 			}
@@ -270,48 +284,6 @@ $(document).ready(function() {
 
 		return dataset;
 	}
-
-	// Used for testing
-	var previousIndex;
-
-	function chooseRandDummyFile() {
-		var array = [];
-
-		// path1 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points1.json";
-		// path2 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points2.json";
-		// path3 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points3.json";
-		// path4 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points4.json";
-		// path5 = "https://raw.github.com/qubz/YourView-Political-Alignment-Visualisation/master/json/dummy_points5.json";
-
-		path1 = "json/points_id_key1.json";
-		path2 = "json/points_id_key2.json";
-		path3 = "json/points_id_key3.json";
-		// path4 = "json/dummy_points4.json";
-		// path5 = "json/dummy_points5.json";
-
-		array.push(path1);
-		array.push(path2);
-		array.push(path3);
-		// array.push(path4);
-		// array.push(path5);
-
-		// Make sure we choose an index different to the last one.
-		while (true) {
-			index = Math.floor((Math.random() * array.length) + 1);
-			if (previousIndex != index) break;
-		}
-
-		previousIndex = index;
-		console.log(array[index - 1]);
-		return array[index - 1];
-	}
-
-	// An Aattempt at setting a higher z-order for grey dots
-	// function sortPrimaryZBelow(a, b) {
-	// 	if (a.primary && !b.primary) return -1;
-	// 	else if (!a.primary && b.primary) return 1;
-	// 	else return 0;
-	// }
 
 	// Key function
 	// see - http://bost.ocks.org/mike/selection/#key
@@ -322,8 +294,8 @@ $(document).ready(function() {
 
 	// Called by sort() to order grey dots ontop of coloured dots
 
-	function primaryUnderneath(a, b) {
-		return d3.descending(isPrimary(a), isPrimary(b));
+	function showcaseZOrderOnTop(a, b) {
+		return d3.ascending(isShowcased(a), isShowcased(b));
 	}
 
 	// The d3 enter event wrapper.
@@ -335,12 +307,14 @@ $(document).ready(function() {
 			.data(data, id)
 			.enter()
 			.append("g")
-			.order(primaryUnderneath)
 			.on("mouseover", function(d) {
 			var sel = d3.select(this);
 			sel.moveToFront();
 			console.log(d.username);
 		});
+
+		// Sort all group elements so that coloured dots always appear at the bottom
+		g.sort(showcaseZOrderOnTop);
 
 		g.append("circle")
 			.attr("cx", function(d) {
@@ -353,18 +327,18 @@ $(document).ready(function() {
 			return 0.7;
 		})
 			.style("stroke", function(d) {
-			if (isPrimary(d)) return "dark" + d.colour;
+			if (isShowcased(d)) return "dark" + d.colour;
 			else return "dimgrey";
 		})
 			.style("stroke-width", 1)
 			.style("fill", function(d) {
-			if (isPrimary(d)) return d.colour;
+			if (isShowcased(d)) return d.colour;
 			return "grey";
 		})
 			.transition()
 			.duration(700)
 			.attr("r", function(d, i) {
-			if (isPrimary(d)) return circleRaduis;
+			if (isShowcased(d)) return circleRaduis;
 			else return circleRaduis - raduisShrinkage;
 		});
 
@@ -379,7 +353,7 @@ $(document).ready(function() {
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "13px")
 			.style("opacity", function(d) {
-			if (isPrimary(d)) return 1.0;
+			if (isShowcased(d)) return 1.0;
 			else return 0.0;
 		})
 			.style("text-anchor", "middle")
@@ -398,91 +372,80 @@ $(document).ready(function() {
 	// This is called on subsequent updates of points from changing the sliders.
 
 	function update() {
-		// Testing stuff
-		// d3.json("http://staging.yourview.org.au/visualization/points.json?forum=1", function(json) {
-		// d3.json(chooseRandDummyFile(), function(json) {
+		// Update the data with new points
+		data = createData();
 
-			// pointDict = scale(json);
+		svg.selectAll("g")
+			.data(data, id)
+			.on("mouseover", function(d) {
+			var sel = d3.select(this);
+			sel.moveToFront();
+			console.log(d.username);
+		});
 
-			// Update the data with new points
-			data = createData();
+		// enter() and append() are omitted for a transision
+		svg.selectAll("circle")
+			.data(data, id)
+			.transition()
+			.duration(1100)
+			.attr("cx", function(d) {
+			return d.x;
+		})
+			.attr("cy", function(d) {
+			return d.y;
+		})
+			.attr("r", function(d) {
+			if (isShowcased(d)) return circleRaduis;
+			else return circleRaduis - raduisShrinkage;
+		})
+			.style("stroke", function(d) {
+			if (isShowcased(d)) return "dark" + d.colour;
+			else return "dimgrey";
+		})
+			.style("stroke-width", 1)
+			.style("fill", function(d) {
+			if (isShowcased(d)) return d.colour;
+			return "grey";
+		});
 
-			svg.selectAll("g")
-				.data(data, id)
-				.sort(primaryUnderneath)
-				.on("mouseover", function(d) {
-				var sel = d3.select(this);
-				sel.moveToFront();
-				console.log(d.username);
-			});
+		svg.selectAll("text")
+			.data(data, id)
+			.transition()
+			.duration(1100)
+			.attr("dx", function(d) {
+			if (is_firefox) return d.x * 2;
+			return d.x;
+		})
+			.attr("dy", function(d) {
+			return d.y + labelOffset;
+		})
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "13px")
+			.style("text-anchor", "middle")
+			.text(function(d) {
+			return d.username;
+		});
 
-			// enter() and append() are omitted for a transision
-			svg.selectAll("circle")
-				.data(data, id)
-				.transition()
-				.duration(1100)
-				.attr("cx", function(d) {
-				return d.x;
-			})
-				.attr("cy", function(d) {
-				return d.y;
-			})
-				.attr("r", function(d) {
-				if (isPrimary(d)) return circleRaduis;
-				else return circleRaduis - raduisShrinkage;
-			})
-				.style("stroke", function(d) {
-				if (isPrimary(d)) return "dark" + d.colour;
-				else return "dimgrey";
-			})
-				.style("stroke-width", 1)
-				.style("fill", function(d) {
-				if (isPrimary(d)) return d.colour;
-				return "grey";
-			});
-
-			svg.selectAll("text")
-				.data(data, id)
-				.transition()
-				.duration(1100)
-				.attr("dx", function(d) {
-				if (is_firefox) return d.x * 2;
-				return d.x;
-			})
-				.attr("dy", function(d) {
-				return d.y + labelOffset;
-			})
-				.attr("font-family", "sans-serif")
-				.attr("font-size", "13px")
-				.style("text-anchor", "middle")
-				.text(function(d) {
-				return d.username;
-			});
-
-		// });
 	}
 
-	// This is Called when buttons are toggled un the entity tab
+	// This is called when a button is clicked in the entity tab
 
-	function toggleEnitiy() {
+	function toggleEntity() {
+		// Sort all group elements so that coloured dots always appear at the bottom
+		svg.selectAll('g')
+			.sort(showcaseZOrderOnTop);
 
-		// svg.selectAll('g')
-		// 	.style("opacity", function(d, i) {
-		// 	if (!visibility[i].isVisible) return 0.0;
-		// 	else return 0.8;
-		// });
-
-		// Set the dot to grey and smaller when not primary
+		// Set the dot to grey and smaller when not showcased
 		svg.selectAll('circle')
 			.transition()
 			.duration(500)
 			.attr("r", function(d) {
-			if (isPrimary(d)) return circleRaduis;
+			if (isShowcased(d)) return circleRaduis;
 			else return circleRaduis - raduisShrinkage;
 		})
 			.style("stroke", function(d) {
-			if ((isPrimary(d)) && d.colour == "grey") return "dimgrey";
-			else if (isPrimary(d)) {
+			if ((isShowcased(d)) && d.colour == "grey") return "dimgrey";
+			else if (isShowcased(d)) {
 				return "dark" + d.colour;
 			} else {
 				return "dimgrey";
@@ -490,28 +453,18 @@ $(document).ready(function() {
 		})
 			.style("stroke-width", 1)
 			.style("fill", function(d) {
-			if (isPrimary(d)) return d.colour;
+			if (isShowcased(d)) return d.colour;
 			else return "grey";
 		});
 
-				// Hide the text if it dot is not a primary
+		// Hide the text if it dot is not a showcase
 		svg.selectAll('text')
 			.transition()
 			.duration(500)
 			.style("opacity", function(d) {
-			if (isPrimary(d)) return 1.0;
+			if (isShowcased(d)) return 1.0;
 			else return 0.0;
 		});
-
-
-		svg.selectAll('g')
-			.sort(primaryUnderneath);
-		// svg.selectAll("g")
-		// 	.on("mouseover", function(d) {
-		// 	var sel = d3.select(this);
-		// 	sel.moveToFront();
-		// 	console.log(d.username);
-		// });
 
 	}
 

@@ -1,81 +1,1256 @@
 {
     "tags": [
         {
+            "id": 9, 
+            "name": " Top Ten", 
+            "weight": "0.0"
+        }, 
+        {
             "id": 5, 
             "name": "Asylum Seekers", 
-            "weight": 1.0
+            "weight": "0.0"
         }, 
         {
             "id": 3, 
             "name": "Economy & Business", 
-            "weight": 1.0
+            "weight": "0.0"
         }, 
         {
             "id": 1, 
             "name": "Environment", 
-            "weight": 1.0
-        }, 
-        {
-            "id": 7, 
-            "name": "Foreign Affairs", 
-            "weight": 1.0
+            "weight": "0.0"
         }, 
         {
             "id": 6, 
             "name": "Politics", 
-            "weight": 1.0
+            "weight": "0.5"
         }, 
         {
             "id": 4, 
             "name": "Social Policy", 
-            "weight": 1.0
+            "weight": "0.0"
         }
     ], 
-    "users": [
-        {
+    "users": {
+        "2430": {
+            "colour": "grey", 
+            "cred": 8.94, 
+            "id": 2430, 
+            "index": 2, 
+            "link": "<a href=\"/users/2430\">Michael MacWilliam</a> <span class='credibility'>(8.9)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "Michael MacWilliam"
+        }, 
+        "2517": {
             "colour": "red", 
-            "cred": 2.49, 
+            "cred": 2.51, 
             "id": 2517, 
-            "index": 0, 
+            "index": 3, 
             "link": "<a href=\"/users/2517\">Labor</a> <span class='credibility'>(2.5)</span>", 
-            "primary": true, 
+            "notable": true, 
+            "showcase": true, 
             "username": "Labor"
         }, 
-        {
+        "2518": {
             "colour": "blue", 
-            "cred": 1.5, 
+            "cred": 1.52, 
             "id": 2518, 
-            "index": 1, 
+            "index": 4, 
             "link": "<a href=\"/users/2518\">Liberals</a> <span class='credibility'>(1.5)</span>", 
-            "primary": true, 
+            "notable": true, 
+            "showcase": true, 
             "username": "Liberals"
         }, 
-        {
+        "2519": {
             "colour": "blue", 
-            "cred": 1.5, 
+            "cred": 1.52, 
             "id": 2519, 
-            "index": 2, 
+            "index": 5, 
             "link": "<a href=\"/users/2519\">Nationals</a> <span class='credibility'>(1.5)</span>", 
-            "primary": true, 
+            "notable": true, 
+            "showcase": true, 
             "username": "Nationals"
         }, 
-        {
+        "2520": {
             "colour": "green", 
-            "cred": 1.52, 
+            "cred": 1.54, 
             "id": 2520, 
-            "index": 3, 
+            "index": 6, 
             "link": "<a href=\"/users/2520\">Greens</a> <span class='credibility'>(1.5)</span>", 
-            "primary": true, 
+            "notable": true, 
+            "showcase": true, 
             "username": "Greens"
         }, 
-        {
+        "2543": {
             "colour": "grey", 
             "cred": 1.26, 
             "id": 2543, 
-            "index": 4, 
+            "index": 7, 
             "link": "<a href=\"/users/2543\">Andrew Wilcox</a> <span class='credibility'>(1.3)</span>", 
-            "primary": false, 
+            "notable": false, 
+            "showcase": false, 
             "username": "Andrew Wilcox"
+        }, 
+        "3": {
+            "colour": "red", 
+            "cred": 5.71, 
+            "id": 3, 
+            "index": 0, 
+            "link": "<a href=\"/users/3\">timvangelder</a> <span class='credibility'>(5.7)</span>", 
+            "notable": true, 
+            "showcase": false, 
+            "username": "timvangelder"
+        }, 
+        "3512": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3512, 
+            "index": 8, 
+            "link": "<a href=\"/users/3512\">test_user_142868</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_142868"
+        }, 
+        "3513": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3513, 
+            "index": 9, 
+            "link": "<a href=\"/users/3513\">test_user_225559</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_225559"
+        }, 
+        "3514": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3514, 
+            "index": 10, 
+            "link": "<a href=\"/users/3514\">test_user_141853</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_141853"
+        }, 
+        "3515": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3515, 
+            "index": 11, 
+            "link": "<a href=\"/users/3515\">test_user_94066</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_94066"
+        }, 
+        "3516": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3516, 
+            "index": 12, 
+            "link": "<a href=\"/users/3516\">test_user_9572</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_9572"
+        }, 
+        "3517": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3517, 
+            "index": 13, 
+            "link": "<a href=\"/users/3517\">test_user_310911</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_310911"
+        }, 
+        "3518": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3518, 
+            "index": 14, 
+            "link": "<a href=\"/users/3518\">test_user_2546</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_2546"
+        }, 
+        "3519": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3519, 
+            "index": 15, 
+            "link": "<a href=\"/users/3519\">test_user_125625</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_125625"
+        }, 
+        "3520": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3520, 
+            "index": 16, 
+            "link": "<a href=\"/users/3520\">test_user_858886</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_858886"
+        }, 
+        "3521": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3521, 
+            "index": 17, 
+            "link": "<a href=\"/users/3521\">test_user_26405</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_26405"
+        }, 
+        "3522": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3522, 
+            "index": 18, 
+            "link": "<a href=\"/users/3522\">test_user_501514</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_501514"
+        }, 
+        "3523": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3523, 
+            "index": 19, 
+            "link": "<a href=\"/users/3523\">test_user_388545</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_388545"
+        }, 
+        "3524": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3524, 
+            "index": 20, 
+            "link": "<a href=\"/users/3524\">test_user_360363</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_360363"
+        }, 
+        "3525": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3525, 
+            "index": 21, 
+            "link": "<a href=\"/users/3525\">test_user_491406</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_491406"
+        }, 
+        "3526": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3526, 
+            "index": 22, 
+            "link": "<a href=\"/users/3526\">test_user_746411</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_746411"
+        }, 
+        "3527": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3527, 
+            "index": 23, 
+            "link": "<a href=\"/users/3527\">test_user_789712</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_789712"
+        }, 
+        "3528": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3528, 
+            "index": 24, 
+            "link": "<a href=\"/users/3528\">test_user_870835</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_870835"
+        }, 
+        "3529": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3529, 
+            "index": 25, 
+            "link": "<a href=\"/users/3529\">test_user_465023</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_465023"
+        }, 
+        "3530": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3530, 
+            "index": 26, 
+            "link": "<a href=\"/users/3530\">test_user_778260</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_778260"
+        }, 
+        "3531": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3531, 
+            "index": 27, 
+            "link": "<a href=\"/users/3531\">test_user_939770</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_939770"
+        }, 
+        "3532": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3532, 
+            "index": 28, 
+            "link": "<a href=\"/users/3532\">test_user_306129</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_306129"
+        }, 
+        "3533": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3533, 
+            "index": 29, 
+            "link": "<a href=\"/users/3533\">test_user_356581</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_356581"
+        }, 
+        "3534": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3534, 
+            "index": 30, 
+            "link": "<a href=\"/users/3534\">test_user_476166</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_476166"
+        }, 
+        "3535": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3535, 
+            "index": 31, 
+            "link": "<a href=\"/users/3535\">test_user_420403</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_420403"
+        }, 
+        "3536": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3536, 
+            "index": 32, 
+            "link": "<a href=\"/users/3536\">test_user_906462</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_906462"
+        }, 
+        "3537": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3537, 
+            "index": 33, 
+            "link": "<a href=\"/users/3537\">test_user_168782</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_168782"
+        }, 
+        "3538": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3538, 
+            "index": 34, 
+            "link": "<a href=\"/users/3538\">test_user_766361</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_766361"
+        }, 
+        "3539": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3539, 
+            "index": 35, 
+            "link": "<a href=\"/users/3539\">test_user_647319</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_647319"
+        }, 
+        "3540": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3540, 
+            "index": 36, 
+            "link": "<a href=\"/users/3540\">test_user_145024</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_145024"
+        }, 
+        "3541": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3541, 
+            "index": 37, 
+            "link": "<a href=\"/users/3541\">test_user_867103</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_867103"
+        }, 
+        "3542": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3542, 
+            "index": 38, 
+            "link": "<a href=\"/users/3542\">test_user_822797</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_822797"
+        }, 
+        "3543": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3543, 
+            "index": 39, 
+            "link": "<a href=\"/users/3543\">test_user_317421</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_317421"
+        }, 
+        "3544": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3544, 
+            "index": 40, 
+            "link": "<a href=\"/users/3544\">test_user_326960</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_326960"
+        }, 
+        "3545": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3545, 
+            "index": 41, 
+            "link": "<a href=\"/users/3545\">test_user_820723</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_820723"
+        }, 
+        "3546": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3546, 
+            "index": 42, 
+            "link": "<a href=\"/users/3546\">test_user_795110</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_795110"
+        }, 
+        "3547": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3547, 
+            "index": 43, 
+            "link": "<a href=\"/users/3547\">test_user_323063</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_323063"
+        }, 
+        "3548": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3548, 
+            "index": 44, 
+            "link": "<a href=\"/users/3548\">test_user_988217</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_988217"
+        }, 
+        "3549": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3549, 
+            "index": 45, 
+            "link": "<a href=\"/users/3549\">test_user_726583</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_726583"
+        }, 
+        "3550": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3550, 
+            "index": 46, 
+            "link": "<a href=\"/users/3550\">test_user_486173</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_486173"
+        }, 
+        "3551": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3551, 
+            "index": 47, 
+            "link": "<a href=\"/users/3551\">test_user_517137</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_517137"
+        }, 
+        "3552": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3552, 
+            "index": 48, 
+            "link": "<a href=\"/users/3552\">test_user_405235</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_405235"
+        }, 
+        "3553": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3553, 
+            "index": 49, 
+            "link": "<a href=\"/users/3553\">test_user_270479</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_270479"
+        }, 
+        "3554": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3554, 
+            "index": 50, 
+            "link": "<a href=\"/users/3554\">test_user_305148</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_305148"
+        }, 
+        "3555": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3555, 
+            "index": 51, 
+            "link": "<a href=\"/users/3555\">test_user_80120</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_80120"
+        }, 
+        "3556": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3556, 
+            "index": 52, 
+            "link": "<a href=\"/users/3556\">test_user_106755</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_106755"
+        }, 
+        "3557": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3557, 
+            "index": 53, 
+            "link": "<a href=\"/users/3557\">test_user_117970</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_117970"
+        }, 
+        "3558": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3558, 
+            "index": 54, 
+            "link": "<a href=\"/users/3558\">test_user_139532</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_139532"
+        }, 
+        "3559": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3559, 
+            "index": 55, 
+            "link": "<a href=\"/users/3559\">test_user_725313</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_725313"
+        }, 
+        "3560": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3560, 
+            "index": 56, 
+            "link": "<a href=\"/users/3560\">test_user_420370</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_420370"
+        }, 
+        "3561": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3561, 
+            "index": 57, 
+            "link": "<a href=\"/users/3561\">test_user_773015</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_773015"
+        }, 
+        "3562": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3562, 
+            "index": 58, 
+            "link": "<a href=\"/users/3562\">test_user_337287</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_337287"
+        }, 
+        "3563": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3563, 
+            "index": 59, 
+            "link": "<a href=\"/users/3563\">test_user_313996</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_313996"
+        }, 
+        "3564": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3564, 
+            "index": 60, 
+            "link": "<a href=\"/users/3564\">test_user_676139</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_676139"
+        }, 
+        "3565": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3565, 
+            "index": 61, 
+            "link": "<a href=\"/users/3565\">test_user_154217</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_154217"
+        }, 
+        "3566": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3566, 
+            "index": 62, 
+            "link": "<a href=\"/users/3566\">test_user_90511</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_90511"
+        }, 
+        "3567": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3567, 
+            "index": 63, 
+            "link": "<a href=\"/users/3567\">test_user_271885</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_271885"
+        }, 
+        "3568": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3568, 
+            "index": 64, 
+            "link": "<a href=\"/users/3568\">test_user_721042</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_721042"
+        }, 
+        "3569": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3569, 
+            "index": 65, 
+            "link": "<a href=\"/users/3569\">test_user_395553</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_395553"
+        }, 
+        "3570": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3570, 
+            "index": 66, 
+            "link": "<a href=\"/users/3570\">test_user_993890</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_993890"
+        }, 
+        "3571": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3571, 
+            "index": 67, 
+            "link": "<a href=\"/users/3571\">test_user_137376</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_137376"
+        }, 
+        "3572": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3572, 
+            "index": 68, 
+            "link": "<a href=\"/users/3572\">test_user_367239</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_367239"
+        }, 
+        "3573": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3573, 
+            "index": 69, 
+            "link": "<a href=\"/users/3573\">test_user_518389</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_518389"
+        }, 
+        "3574": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3574, 
+            "index": 70, 
+            "link": "<a href=\"/users/3574\">test_user_14892</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_14892"
+        }, 
+        "3575": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3575, 
+            "index": 71, 
+            "link": "<a href=\"/users/3575\">test_user_320136</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_320136"
+        }, 
+        "3576": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3576, 
+            "index": 72, 
+            "link": "<a href=\"/users/3576\">test_user_119657</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_119657"
+        }, 
+        "3577": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3577, 
+            "index": 73, 
+            "link": "<a href=\"/users/3577\">test_user_947886</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_947886"
+        }, 
+        "3578": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3578, 
+            "index": 74, 
+            "link": "<a href=\"/users/3578\">test_user_551406</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_551406"
+        }, 
+        "3579": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3579, 
+            "index": 75, 
+            "link": "<a href=\"/users/3579\">test_user_944680</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_944680"
+        }, 
+        "3580": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3580, 
+            "index": 76, 
+            "link": "<a href=\"/users/3580\">test_user_987627</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_987627"
+        }, 
+        "3581": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3581, 
+            "index": 77, 
+            "link": "<a href=\"/users/3581\">test_user_511549</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_511549"
+        }, 
+        "3582": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3582, 
+            "index": 78, 
+            "link": "<a href=\"/users/3582\">test_user_555564</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_555564"
+        }, 
+        "3583": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3583, 
+            "index": 79, 
+            "link": "<a href=\"/users/3583\">test_user_300644</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_300644"
+        }, 
+        "3584": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3584, 
+            "index": 80, 
+            "link": "<a href=\"/users/3584\">test_user_490961</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_490961"
+        }, 
+        "3585": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3585, 
+            "index": 81, 
+            "link": "<a href=\"/users/3585\">test_user_461243</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_461243"
+        }, 
+        "3586": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3586, 
+            "index": 82, 
+            "link": "<a href=\"/users/3586\">test_user_306041</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_306041"
+        }, 
+        "3587": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3587, 
+            "index": 83, 
+            "link": "<a href=\"/users/3587\">test_user_412331</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_412331"
+        }, 
+        "3588": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3588, 
+            "index": 84, 
+            "link": "<a href=\"/users/3588\">test_user_767963</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_767963"
+        }, 
+        "3589": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3589, 
+            "index": 85, 
+            "link": "<a href=\"/users/3589\">test_user_153270</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_153270"
+        }, 
+        "3590": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3590, 
+            "index": 86, 
+            "link": "<a href=\"/users/3590\">test_user_22263</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_22263"
+        }, 
+        "3591": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3591, 
+            "index": 87, 
+            "link": "<a href=\"/users/3591\">test_user_863307</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_863307"
+        }, 
+        "3592": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3592, 
+            "index": 88, 
+            "link": "<a href=\"/users/3592\">test_user_319191</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_319191"
+        }, 
+        "3593": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3593, 
+            "index": 89, 
+            "link": "<a href=\"/users/3593\">test_user_228979</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_228979"
+        }, 
+        "3594": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3594, 
+            "index": 90, 
+            "link": "<a href=\"/users/3594\">test_user_124081</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_124081"
+        }, 
+        "3595": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3595, 
+            "index": 91, 
+            "link": "<a href=\"/users/3595\">test_user_590802</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_590802"
+        }, 
+        "3596": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3596, 
+            "index": 92, 
+            "link": "<a href=\"/users/3596\">test_user_655153</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_655153"
+        }, 
+        "3597": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3597, 
+            "index": 93, 
+            "link": "<a href=\"/users/3597\">test_user_56960</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_56960"
+        }, 
+        "3598": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3598, 
+            "index": 94, 
+            "link": "<a href=\"/users/3598\">test_user_681739</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_681739"
+        }, 
+        "3599": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3599, 
+            "index": 95, 
+            "link": "<a href=\"/users/3599\">test_user_188750</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_188750"
+        }, 
+        "3600": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3600, 
+            "index": 96, 
+            "link": "<a href=\"/users/3600\">test_user_554723</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_554723"
+        }, 
+        "3601": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3601, 
+            "index": 97, 
+            "link": "<a href=\"/users/3601\">test_user_229168</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_229168"
+        }, 
+        "3602": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3602, 
+            "index": 98, 
+            "link": "<a href=\"/users/3602\">test_user_49793</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_49793"
+        }, 
+        "3603": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3603, 
+            "index": 99, 
+            "link": "<a href=\"/users/3603\">test_user_796965</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_796965"
+        }, 
+        "3604": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3604, 
+            "index": 100, 
+            "link": "<a href=\"/users/3604\">test_user_394138</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_394138"
+        }, 
+        "3605": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3605, 
+            "index": 101, 
+            "link": "<a href=\"/users/3605\">test_user_131281</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_131281"
+        }, 
+        "3606": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3606, 
+            "index": 102, 
+            "link": "<a href=\"/users/3606\">test_user_383773</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_383773"
+        }, 
+        "3607": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3607, 
+            "index": 103, 
+            "link": "<a href=\"/users/3607\">test_user_885738</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_885738"
+        }, 
+        "3608": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3608, 
+            "index": 104, 
+            "link": "<a href=\"/users/3608\">test_user_825406</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_825406"
+        }, 
+        "3609": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3609, 
+            "index": 105, 
+            "link": "<a href=\"/users/3609\">test_user_99433</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_99433"
+        }, 
+        "3610": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3610, 
+            "index": 106, 
+            "link": "<a href=\"/users/3610\">test_user_415922</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_415922"
+        }, 
+        "3611": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3611, 
+            "index": 107, 
+            "link": "<a href=\"/users/3611\">test_user_316527</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_316527"
+        }, 
+        "3612": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3612, 
+            "index": 108, 
+            "link": "<a href=\"/users/3612\">test_user_164410</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_164410"
+        }, 
+        "3613": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3613, 
+            "index": 109, 
+            "link": "<a href=\"/users/3613\">test_user_434471</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_434471"
+        }, 
+        "3614": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3614, 
+            "index": 110, 
+            "link": "<a href=\"/users/3614\">test_user_92452</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_92452"
+        }, 
+        "3615": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3615, 
+            "index": 111, 
+            "link": "<a href=\"/users/3615\">test_user_768545</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_768545"
+        }, 
+        "3616": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3616, 
+            "index": 112, 
+            "link": "<a href=\"/users/3616\">test_user_485835</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_485835"
+        }, 
+        "3617": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3617, 
+            "index": 113, 
+            "link": "<a href=\"/users/3617\">test_user_847229</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_847229"
+        }, 
+        "3618": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3618, 
+            "index": 114, 
+            "link": "<a href=\"/users/3618\">test_user_818266</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_818266"
+        }, 
+        "3619": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3619, 
+            "index": 115, 
+            "link": "<a href=\"/users/3619\">test_user_971718</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_971718"
+        }, 
+        "3620": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3620, 
+            "index": 116, 
+            "link": "<a href=\"/users/3620\">test_user_762403</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_762403"
+        }, 
+        "3621": {
+            "colour": "grey", 
+            "cred": 1.0, 
+            "id": 3621, 
+            "index": 117, 
+            "link": "<a href=\"/users/3621\">test_user_539648</a> <span class='credibility'>(1.0)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "test_user_539648"
+        }, 
+        "3622": {
+            "colour": "red", 
+            "cred": 1.14, 
+            "id": 3622, 
+            "index": 118, 
+            "link": "<a href=\"/users/3622\">Social Conservative</a> <span class='credibility'>(1.1)</span>", 
+            "notable": true, 
+            "showcase": true, 
+            "username": "Social Conservative"
+        }, 
+        "3623": {
+            "colour": "green", 
+            "cred": 1.22, 
+            "id": 3623, 
+            "index": 119, 
+            "link": "<a href=\"/users/3623\">Social Progressive</a> <span class='credibility'>(1.2)</span>", 
+            "notable": true, 
+            "showcase": true, 
+            "username": "Social Progressive"
+        }, 
+        "3624": {
+            "colour": "blue", 
+            "cred": 1.18, 
+            "id": 3624, 
+            "index": 120, 
+            "link": "<a href=\"/users/3624\">Economic Right</a> <span class='credibility'>(1.2)</span>", 
+            "notable": true, 
+            "showcase": true, 
+            "username": "Economic Right"
+        }, 
+        "3625": {
+            "colour": "red", 
+            "cred": 1.16, 
+            "id": 3625, 
+            "index": 121, 
+            "link": "<a href=\"/users/3625\">Economic Left</a> <span class='credibility'>(1.2)</span>", 
+            "notable": true, 
+            "showcase": true, 
+            "username": "Economic Left"
+        }, 
+        "80": {
+            "colour": "grey", 
+            "cred": 31.18, 
+            "id": 80, 
+            "index": 1, 
+            "link": "<a href=\"/users/80\">chris barnett</a> <span class='credibility'>(31.2)</span>", 
+            "notable": false, 
+            "showcase": false, 
+            "username": "chris barnett"
         }
-    ]
+    }
 }
